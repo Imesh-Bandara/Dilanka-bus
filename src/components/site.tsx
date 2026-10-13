@@ -1,8 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
-import { ArrowUpRight, Menu, X, Phone, MapPin, ArrowRight } from "lucide-react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  Menu,
+  X,
+  Phone,
+  Globe2,
+  Ticket,
+  ArrowRight,
+  ChevronDown,
+} from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
 type Lang = "en" | "si" | "ta";
 const words = {
   en: {
@@ -66,26 +76,65 @@ export function Site({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>("en"),
     [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const header = useRef<HTMLElement>(null),
+    menuButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const saved = localStorage.getItem("de-language") as Lang;
-    if (saved && saved in words) setLang(saved);
+    try {
+      const saved = localStorage.getItem("de-language") as Lang;
+      if (saved && saved in words) setLang(saved);
+    } catch {
+      /* Keep the default language if browser storage is unavailable. */
+    }
   }, []);
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
   useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuButton.current?.focus();
+      }
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!header.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const desktop = matchMedia("(min-width: 1200px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOutside);
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOutside);
+      desktop.removeEventListener("change", closeOnDesktop);
+    };
+  }, [open]);
+  useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
   const t = words[lang];
+  const navigation = [
+    ["/routes", t.routes],
+    ["/fleet", t.fleet],
+    ["/about", t.about],
+    ["/contact", t.contact],
+  ];
   return (
     <Locale.Provider value={{ lang, t }}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <div className="demo-strip">
         <span className="demo-dot" /> CLIENT PREVIEW{" "}
         <span className="strip-divider">/</span> Explore freely. All bookings
         are demonstrations.
       </div>
-      <header className={pathname === "/" ? "header header-home" : "header"}>
-        <div className="container nav">
+      <header ref={header} className="site-header">
+        <div className="header-shell">
           <Link href="/" className="brand" aria-label="Dilanka Express home">
             <img src="/images/logo.jpg" alt="DE" />
             <span>
@@ -93,58 +142,113 @@ export function Site({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
           <nav
-            className={open ? "nav-links open" : "nav-links"}
+            id="primary-navigation"
+            className={open ? "primary-nav is-open" : "primary-nav"}
             aria-label="Main navigation"
           >
-            <Link
-              className={pathname === "/routes" ? "active" : ""}
-              href="/routes"
-            >
-              {t.routes}
-            </Link>
-            <Link
-              className={pathname === "/fleet" ? "active" : ""}
-              href="/fleet"
-            >
-              {t.fleet}
-            </Link>
-            <Link
-              className={pathname === "/about" ? "active" : ""}
-              href="/about"
-            >
-              {t.about}
-            </Link>
-            <Link
-              className={pathname === "/contact" ? "active" : ""}
-              href="/contact"
-            >
-              {t.contact}
-            </Link>
+            <span className="mobile-nav-heading eyebrow">EXPLORE DILANKA</span>
+            <div className="primary-nav-rail">
+              {navigation.map(([href, label]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="primary-nav-link"
+                  aria-current={pathname === href ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  {label}
+                  <ArrowUpRight className="mobile-link-arrow" size={17} />
+                </Link>
+              ))}
+            </div>
+            <div className="mobile-nav-actions">
+              <Link
+                href="/search"
+                className="header-book"
+                onClick={() => setOpen(false)}
+              >
+                {t.book}
+                <ArrowUpRight size={18} />
+              </Link>
+              <Link
+                href="/find-ticket"
+                className="header-ticket"
+                aria-current={
+                  pathname.startsWith("/ticket/") || pathname === "/find-ticket"
+                    ? "page"
+                    : undefined
+                }
+                onClick={() => setOpen(false)}
+              >
+                <Ticket size={18} />
+                {t.find}
+                <ArrowRight size={16} />
+              </Link>
+              <div className="mobile-nav-support">
+                <Link href="/help" onClick={() => setOpen(false)}>
+                  Help & policies
+                </Link>
+                <a href="tel:+94777914680">
+                  <Phone size={14} />
+                  0777 914680
+                </a>
+              </div>
+            </div>
           </nav>
-          <div className="nav-actions">
-            <select
-              aria-label="Interface language"
-              value={lang}
-              onChange={(e) => {
-                setLang(e.target.value as Lang);
-                localStorage.setItem("de-language", e.target.value);
-              }}
+          <div className="header-actions">
+            <label className="header-language header-control">
+              <Globe2 size={16} />
+              <select
+                aria-label="Interface language"
+                value={lang}
+                onChange={(e) => {
+                  setLang(e.target.value as Lang);
+                  try {
+                    localStorage.setItem("de-language", e.target.value);
+                  } catch {}
+                }}
+              >
+                <option value="en">EN</option>
+                <option value="si">සිං</option>
+                <option value="ta">தமிழ்</option>
+              </select>
+              <ChevronDown size={12} />
+            </label>
+            <ThemeToggle />
+            <span className="header-action-divider" aria-hidden="true" />
+            <Link
+              href="/find-ticket"
+              className="header-ticket"
+              aria-label={t.find}
+              aria-current={
+                pathname.startsWith("/ticket/") || pathname === "/find-ticket"
+                  ? "page"
+                  : undefined
+              }
             >
-              <option value="en">EN</option>
-              <option value="si">සිං</option>
-              <option value="ta">தமிழ்</option>
-            </select>
-            <Link href="/find-ticket" className="ticket-link">
-              {t.find}
+              <Ticket size={17} />
+              <span>{t.find}</span>
             </Link>
-            <Link href="/search" className="button button-dark nav-book">
+            <Link
+              href="/search"
+              className="header-book"
+              aria-current={
+                pathname === "/search" || pathname.startsWith("/book/")
+                  ? "page"
+                  : undefined
+              }
+            >
               {t.book}
               <ArrowUpRight size={16} />
             </Link>
             <button
-              className="menu-button icon-button"
+              ref={menuButton}
+              type="button"
+              className="header-menu header-control"
               onClick={() => setOpen(!open)}
               aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="primary-navigation"
             >
               {open ? <X /> : <Menu />}
             </button>
@@ -152,6 +256,8 @@ export function Site({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main
+        id="main-content"
+        tabIndex={-1}
         className={
           pathname === "/"
             ? "home-content"

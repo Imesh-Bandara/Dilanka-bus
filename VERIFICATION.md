@@ -63,3 +63,14 @@ See README.md for setup, staff credentials location and the client demonstration
 - Increased small text across the shared, landing and interior styles: desktop intro copy 14 → 18 px, 13 px body text → 16 px, 12 px labels → 15 px, with smaller metadata also increased. Existing large editorial headings retain their scale.
 - Adjusted tablet navigation to collapse below 1001 px so larger link labels have room.
 - Checked home, routes, fleet, contact, help, ticket recovery, results and booking at 360 px: no horizontal document overflow. Production build and its TypeScript check pass. Booking behaviour was unchanged.
+
+## Navigation and dark appearance
+
+- Production build and TypeScript validation pass after the shared header/theme update. Booking and database service code was unchanged.
+- Reviewed light and dark header layouts, persistent current-page outlines, compact utility controls, and sticky positioning while scrolling.
+- Theme choice survived navigation and reload. Switching theme during seat selection preserved the chosen seat. The bootstrap applies a stored preference, otherwise the system preference, before paint.
+- Reviewed mobile menu opening, full-width boundaries, navigation-driven dismissal, Escape dismissal and focus returning to the menu button.
+- Sinhala and Tamil headers fit at 1280 px. Tamil mobile menu labels fit at 320 px, including a wrapped booking action. Home, routes, fleet, about, contact, help, recovery, results and booking fit at 360 px without horizontal document overflow in dark mode.
+- Inspected the existing demo boarding pass at mobile width: QR image retained a white background. Reviewed the dark public verification and authenticated staff overview. No real bookings or staff settings were changed for these checks.
+- Sampled rendered text contrast on primary page types and corrected dark-mode search selects, landing utility links and metadata. Map tiles, photos and QR pixels are not filtered or inverted; print styling keeps boarding passes on white paper.
+- Research, interaction details and scope are recorded in `research/NAVIGATION_AND_THEME.md`.
