@@ -23,6 +23,9 @@ import {
 } from "lucide-react";
 import { api, PageTitle, Notice, Loading, useLocale } from "./site";
 import { routes as initialRoutes, buses } from "@/lib/seed";
+import { JourneyMap } from "./journey-map";
+import { JourneyMedia, HeroPhotos } from "./journey-media";
+import { expresswayRoute } from "@/lib/journey-map";
 import {
   dateLabel,
   money,
@@ -184,17 +187,10 @@ export function Home() {
             </div>
           </div>
           <div className="hero-image">
-            <img
-              src="/images/fleet.webp"
-              alt="Two Dilanka Express Yutong coaches ready for a journey"
-              fetchPriority="high"
-            />
+            <HeroPhotos />
             <div className="image-shade" />
             <div className="hero-image-top">
               <span className="glass-chip">DILANKA EXPRESS</span>
-              <span className="photo-counter">
-                01 <span>/ 01</span>
-              </span>
             </div>
             <div className="hero-caption">
               <span>THE ROAD FEELS DIFFERENT WITH US</span>
@@ -293,6 +289,7 @@ export function Home() {
           </div>
         </div>
       </section>
+      <JourneyMedia />
       <section className="section container story-section">
         <div className="story-photo">
           <img
@@ -350,12 +347,20 @@ function RouteCard({ route: r, index }: { route: Route; index: number }) {
       className={`route-card route-tone-${index % 3}`}
     >
       <div className="route-art">
+        <img
+          src={
+            /kandy|oluvil/.test(r.id)
+              ? "/images/dilanka-hills.webp"
+              : "/images/dilanka-lineup.webp"
+          }
+          alt="Dilanka Express fleet photograph; sample trip assignment"
+          loading="lazy"
+        />
         <span className="route-number">0{index + 1}</span>
-        <RouteIcon size={80} strokeWidth={0.75} />
         <span className="route-art-label">
-          {index === 0
+          {/kandy|oluvil/.test(r.id)
             ? "THROUGH THE HILLS"
-            : index === 1
+            : expresswayRoute(r)
               ? "THE EXPRESSWAY"
               : "TOWARDS THE COAST"}
         </span>
@@ -505,9 +510,12 @@ export function SearchPage() {
             return (
               <article className="trip-card" key={t.id}>
                 <div className="trip-brand">
-                  <div className="coach-icon">
-                    <BusFront size={26} />
-                  </div>
+                  <img
+                    className="trip-coach-photo"
+                    src="/images/fleet.webp"
+                    alt="Dilanka Yutong coaches · fleet reference photo"
+                    loading="lazy"
+                  />
                   <div>
                     <h3>{t.bus.name}</h3>
                     <span>
@@ -515,6 +523,9 @@ export function SearchPage() {
                     </span>
                   </div>
                   <span className="badge">DEMO SERVICE</span>
+                  <small className="trip-photo-note">
+                    Fleet photo · assignment is illustrative
+                  </small>
                 </div>
                 <div className="trip-main">
                   <div className="trip-time">
@@ -574,31 +585,13 @@ export function SearchPage() {
                   <span>
                     <Armchair size={14} /> Reclining seats
                   </span>
-                  <details>
-                    <summary>
-                      Route & boarding stops <ChevronRight size={14} />
-                    </summary>
-                    <div>
-                      {t.route.stops.map((s) => (
-                        <p key={s.name}>
-                          {s.name}
-                          <span>
-                            {time(
-                              new Date(
-                                new Date(t.departure).getTime() +
-                                  s.offset * 60000,
-                              ).toISOString(),
-                            )}
-                          </span>
-                        </p>
-                      ))}
-                      <small>
-                        Intermediate times and boarding locations are
-                        illustrative.
-                      </small>
-                    </div>
-                  </details>
                 </div>
+                <JourneyMap
+                  route={t.route}
+                  departure={t.departure}
+                  pickup={startStop.name}
+                  dropoff={endStop.name}
+                />
               </article>
             );
           })
@@ -671,12 +664,20 @@ export function InfoPage({ kind }: { kind: string }) {
           description="Meet the fleet inspiration behind our Dilanka Express prototype."
         />
         <div className="container fleet-cover">
-          <img src="/images/fleet.webp" alt="Dilanka Yutong coaches" />
+          <img
+            src="/images/dilanka-lineup.webp"
+            alt="Dilanka Express fleet and team in Ampara"
+          />
         </div>
         <div className="container section fleet-grid">
           {fleet.map((b) => (
             <article className="panel" key={b.id}>
-              <BusFront size={30} />
+              <img
+                className="fleet-card-photo"
+                src="/images/fleet.webp"
+                alt="Dilanka fleet reference; not a verified trip assignment"
+                loading="lazy"
+              />
               <span className="eyebrow">{b.registration}</span>
               <h2>{b.name}</h2>
               <p>{b.capacity} numbered seats</p>
@@ -694,6 +695,7 @@ export function InfoPage({ kind }: { kind: string }) {
             </article>
           ))}
         </div>
+        <JourneyMedia />
       </>
     );
   if (kind === "about")

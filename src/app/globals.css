@@ -3965,3 +3965,622 @@ td .text-link {
     font-size: clamp(42px, 4.8vw, 55px);
   }
 }
+
+/* Company photography and route exploration */
+.hero-photo-picker {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: white;
+  font-size: 10px;
+}
+.hero-photo-picker button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ffffff77;
+  border-radius: 50%;
+  background: #14281f66;
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.hero-image-top {
+  pointer-events: none;
+}
+.route-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.route-card:hover .route-art > img {
+  transform: scale(1.04);
+}
+.route-art::before {
+  inset: 0;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(transparent 30%, #10241dbb);
+  z-index: 1;
+}
+.route-art::after {
+  display: none;
+}
+.route-number,
+.route-art-label {
+  color: white;
+  z-index: 2;
+}
+.trip-brand {
+  flex-wrap: wrap;
+}
+.trip-coach-photo {
+  width: 104px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.trip-photo-note {
+  margin-left: auto;
+  color: #7b8279;
+  font-size: 9px;
+}
+.fleet-card-photo {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+.journey-media .section-heading > p {
+  color: #737b71;
+  line-height: 1.7;
+  font-size: 13px;
+}
+.media-grid {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 28px;
+}
+.photo-stage {
+  position: relative;
+  min-height: 440px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #263a30;
+}
+.photo-stage > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+.photo-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 35%, #10241de6);
+}
+.photo-caption {
+  position: absolute;
+  bottom: 76px;
+  left: 30px;
+  right: 25px;
+  color: #fff;
+}
+.photo-caption .eyebrow {
+  color: #e1c679;
+}
+.photo-caption h3 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  margin: 10px 0;
+}
+.photo-caption a {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 11px;
+  color: #e8eadf;
+}
+.photo-controls {
+  position: absolute;
+  bottom: 22px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: white;
+  font-size: 11px;
+}
+.photo-controls button {
+  border: 1px solid #ffffff66;
+  background: #ffffff15;
+  color: #fff;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.photo-controls button:hover {
+  background: #b79443;
+}
+.photo-dots {
+  position: absolute;
+  bottom: 35px;
+  left: 30px;
+  display: flex;
+  gap: 8px;
+}
+.photo-dots button {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff55;
+  cursor: pointer;
+  padding: 0;
+}
+.photo-dots button[aria-pressed="true"] {
+  background: #e5c575;
+  width: 23px;
+  border-radius: 6px;
+}
+.video-column {
+  background: #eae9df;
+  border: 1px solid #deded1;
+  padding: 34px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.video-column h3 {
+  font-size: 36px;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  margin: 18px 0;
+}
+.video-column > p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #6d776b;
+  margin-bottom: 25px;
+}
+.video-choice {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  text-align: left;
+  padding: 18px 0;
+  border: 0;
+  border-top: 1px solid #cfd3c5;
+  background: transparent;
+  cursor: pointer;
+  color: #26392e;
+  width: 100%;
+}
+.video-choice > span:nth-child(2) {
+  flex: 1;
+}
+.video-choice strong,
+.video-choice small {
+  display: block;
+}
+.video-choice strong {
+  font-size: 13px;
+}
+.video-choice small {
+  margin-top: 5px;
+  font-size: 10px;
+  color: #77816f;
+}
+.play-circle {
+  width: 43px;
+  height: 43px;
+  border: 1px solid #b2a371;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #a17d29;
+  flex-shrink: 0;
+}
+.video-choice:hover .play-circle {
+  background: #c4a457;
+  color: #fff;
+}
+.video-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #071910d9;
+  backdrop-filter: blur(7px);
+}
+.video-dialog-card {
+  width: min(960px, 100%);
+  background: #f7f7ef;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 95dvh;
+  overflow-y: auto;
+}
+.video-dialog-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 26px;
+  gap: 16px;
+}
+.video-dialog-top h3 {
+  font-size: 24px;
+  margin: 6px 0 0;
+}
+.video-dialog-top button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 9px;
+}
+.video-dialog iframe {
+  width: 100%;
+  height: min(60vh, 540px);
+  border: 0;
+  display: block;
+  background: #111;
+}
+.video-consent {
+  min-height: 340px;
+  background: #14281f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px;
+  text-align: center;
+}
+.video-consent img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+}
+.video-consent > button,
+.video-consent > p {
+  position: relative;
+}
+.video-consent > p {
+  color: #fff;
+  font-size: 11px;
+  max-width: 380px;
+  line-height: 1.8;
+}
+.video-fallback {
+  padding: 16px 26px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 11px;
+}
+.video-fallback a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: underline;
+}
+.journey-details {
+  border-top: 1px solid #e4e7dd;
+  margin: 0;
+}
+.journey-details > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 17px 0;
+  font-size: 12px;
+  color: #344c3d;
+}
+.journey-details > summary::-webkit-details-marker {
+  display: none;
+}
+.journey-details > summary > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.map-summary-via {
+  color: #7b8575;
+  font-size: 10px;
+  margin-left: auto;
+}
+.journey-details[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+.journey-map-content {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  border: 1px solid #dce2d5;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  background: #fff;
+}
+.journey-map-canvas {
+  position: relative;
+  min-width: 0;
+  min-height: 400px;
+}
+.leaflet-host {
+  height: 100%;
+  min-height: 400px;
+  width: 100%;
+  background: #e8eadd;
+  z-index: 0;
+}
+.map-fit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  border: 1px solid #d1d8c9;
+  border-radius: 5px;
+  padding: 9px 12px;
+  background: #fffffff2;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px #263b3020;
+}
+.map-legend {
+  position: absolute;
+  bottom: 24px;
+  left: 12px;
+  display: flex;
+  gap: 14px;
+  padding: 9px 12px;
+  background: #fffffff2;
+  border: 1px solid #d1d8c9;
+  border-radius: 5px;
+  font-size: 10px;
+  z-index: 1;
+}
+.map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.map-legend i {
+  width: 18px;
+  border-top: 3px dashed #314b3e;
+}
+.map-legend i.highway {
+  border-color: #c29d47;
+}
+.map-stop-panel {
+  min-width: 0;
+  max-height: 490px;
+  overflow: auto;
+}
+.map-stop-heading {
+  padding: 23px 23px 13px;
+}
+.map-stop-heading h3 {
+  font-size: 19px;
+  margin: 9px 0;
+}
+.map-stop-heading p {
+  font-size: 11px;
+  color: #74806b;
+}
+.map-stop-list {
+  list-style: none;
+  padding: 0 12px 18px;
+  margin: 0;
+}
+.map-stop-list li {
+  border-radius: 7px;
+  position: relative;
+}
+.map-stop-list li.active {
+  background: #f2f1e6;
+}
+.map-stop-list li > button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: 0;
+  padding: 13px 12px;
+  text-align: left;
+  cursor: pointer;
+  color: #73816b;
+}
+.map-stop-list li.in-journey > button {
+  color: #273e2e;
+}
+.stop-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #bac4b0;
+  flex-shrink: 0;
+}
+.in-journey .stop-dot {
+  border-color: #b49241;
+  background: #b49241;
+}
+.map-stop-list strong {
+  font-size: 12px;
+  display: block;
+}
+.map-stop-list small {
+  display: block;
+  font-size: 9px;
+  color: #7d8776;
+  margin-top: 4px;
+}
+.map-stop-list time {
+  margin-left: auto;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.selected-stop {
+  padding: 0 12px 14px 34px;
+  font-size: 10px;
+}
+.selected-stop p {
+  display: flex;
+  gap: 5px;
+  align-items: flex-start;
+  line-height: 1.7;
+  color: #7b826f;
+  margin: 0 0 8px;
+}
+.selected-stop a {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  text-decoration: underline;
+  color: #73602b;
+}
+.map-disclaimer {
+  grid-column: 1/-1;
+  margin: 0;
+  padding: 13px 18px;
+  background: #f5f6ef;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #7c8574;
+  border-top: 1px solid #e1e5d8;
+}
+.booking-map {
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.booking-map .journey-details {
+  border: 1px solid #dde2d5;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 20px;
+}
+@media (max-width: 850px) {
+  .media-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .photo-stage {
+    min-height: 400px;
+  }
+  .video-column {
+    padding: 28px;
+  }
+  .video-column h3 br {
+    display: none;
+  }
+  .journey-media .section-heading {
+    align-items: flex-start;
+  }
+  .journey-map-content {
+    grid-template-columns: 1fr;
+  }
+  .journey-map-canvas,
+  .leaflet-host {
+    height: 330px;
+    min-height: 330px;
+  }
+  .map-stop-panel {
+    max-height: 350px;
+  }
+  .map-summary-via {
+    display: none;
+  }
+  .journey-details > summary > svg:last-child {
+    margin-left: auto;
+  }
+  .trip-photo-note {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .trip-coach-photo {
+    width: 90px;
+    height: 64px;
+  }
+}
+@media (max-width: 500px) {
+  .journey-media .section-heading {
+    display: block;
+  }
+  .photo-stage {
+    min-height: 360px;
+  }
+  .photo-caption {
+    left: 22px;
+    bottom: 83px;
+  }
+  .photo-caption h3 {
+    font-size: 26px;
+  }
+  .video-column {
+    padding: 24px;
+  }
+  .video-column h3 {
+    font-size: 29px;
+  }
+  .video-dialog {
+    padding: 12px;
+  }
+  .video-dialog-top {
+    padding: 18px;
+  }
+  .video-dialog-top h3 {
+    font-size: 18px;
+  }
+  .video-consent {
+    min-height: 310px;
+  }
+  .video-fallback {
+    padding: 15px;
+  }
+  .journey-details > summary {
+    font-size: 11px;
+  }
+  .journey-map-canvas,
+  .leaflet-host {
+    height: 300px;
+    min-height: 300px;
+  }
+  .map-fit {
+    font-size: 9px;
+  }
+  .route-art-label {
+    display: none;
+  }
+}
+@media print {
+  .journey-details,
+  .journey-media {
+    display: none;
+  }
+}

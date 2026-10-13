@@ -27,3 +27,12 @@ Verified locally on 13 October 2026. All records used in testing were fictional.
 - Fares, future schedules, vehicle assignments, boarding points and policies remain clearly labelled sample assumptions pending client approval.
 
 See README.md for setup, staff credentials location and the client demonstration script.
+
+## Media and map update
+
+- Fourteen tests pass, including new geographic coverage and highway direction/corridor checks.
+- TypeScript validation passes.
+- Updated Next.js production build passes.
+- Browser-tested gallery navigation, modal opening/closing and company video playback; the embedded short film reached its 10.68-second end.
+- OpenStreetMap tiles rendered with attribution after setting the tile image origin referrer. Stop selection updated the selected town and map focus; Show full route restored the overview.
+- Reviewed the expanded route map at 390px width: map/stop panels stack, booking controls remain visible and the document has no horizontal overflow.

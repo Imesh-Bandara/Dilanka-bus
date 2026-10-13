@@ -18,6 +18,8 @@ The local server automatically creates `.data/staff-access.txt` on first initial
 ## What works
 
 - Original Dilanka-branded responsive home, route, fleet, company, contact and help pages.
+- Dilanka Facebook photo galleries, hero photo controls and click-to-play embedded company films.
+- Interactive route maps on departures and seat selection, with stop focus, boarding/drop-off highlights and illustrative E01 sections. See `research/MEDIA_AND_MAPS.md` for sources and map limitations.
 - Dated trip search, supported intermediate stop pairs, sort and time/layout filters.
 - Separate 49-, 51- and 53-seat numbered templates.
 - Atomic multi-seat holds, five-minute expiry, six-seat booking cap and server-calculated prices.
@@ -57,13 +59,13 @@ The repository is ready for a Next.js deployment; publishing requires access to 
 
 Set these environment variables in Vercel:
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | Pooled managed PostgreSQL URL; required in Vercel |
-| `STAFF_PASSWORD` | Strong administrator password |
-| `STAFF_CHECKIN_PASSWORD` | Separate strong conductor password |
-| `TICKET_SECRET` | Stable random signing secret, at least 32 random bytes recommended |
-| `APP_URL` | Final HTTPS origin used inside QR codes |
+| Variable                 | Purpose                                                            |
+| ------------------------ | ------------------------------------------------------------------ |
+| `DATABASE_URL`           | Pooled managed PostgreSQL URL; required in Vercel                  |
+| `STAFF_PASSWORD`         | Strong administrator password                                      |
+| `STAFF_CHECKIN_PASSWORD` | Separate strong conductor password                                 |
+| `TICKET_SECRET`          | Stable random signing secret, at least 32 random bytes recommended |
+| `APP_URL`                | Final HTTPS origin used inside QR codes                            |
 
 Generate secrets locally with `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"` and enter them directly in hosting settings. Never commit secrets. Keep `TICKET_SECRET` stable: changing it invalidates regenerated QR links. Keep the project preview dataset separate from any future production transport system. Vercel must have read access to bundled `migrations/` and `public/fonts/` files; the build traces them.
 

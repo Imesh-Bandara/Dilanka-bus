@@ -21,6 +21,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { api, post, Loading, Notice, PageTitle, useLocale } from "./site";
+import { JourneyMap } from "./journey-map";
 import {
   type Trip,
   type Booking,
@@ -300,6 +301,14 @@ export function BookPage({ id }: { id: string }) {
           </div>
         ))}
       </div>
+      <div className="container booking-map">
+        <JourneyMap
+          route={trip.route}
+          departure={trip.departure}
+          pickup={pickup}
+          dropoff={dropoff}
+        />
+      </div>
       <div className="container booking-layout">
         <div>
           {error && <Notice type="error">{error}</Notice>}
@@ -342,6 +351,7 @@ export function BookPage({ id }: { id: string }) {
                 <label>
                   Boarding point
                   <select
+                    aria-label="Boarding point"
                     value={pickup}
                     onChange={(e) => setPickup(e.target.value)}
                   >
@@ -353,6 +363,7 @@ export function BookPage({ id }: { id: string }) {
                 <label>
                   Drop-off point
                   <select
+                    aria-label="Drop-off point"
                     value={dropoff}
                     onChange={(e) => setDropoff(e.target.value)}
                   >
