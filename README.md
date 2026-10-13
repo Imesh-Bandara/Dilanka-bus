@@ -18,6 +18,7 @@ The local server automatically creates `.data/staff-access.txt` on first initial
 ## What works
 
 - Original Dilanka-branded responsive home, route, fleet, company, contact and help pages.
+- Editorial landing page with an enhanced client fleet photograph, original fleet image, licensed destination photography, category filters and booking FAQs. Sources, saved assets and the image-edit prompt are in `research/LANDING_DESIGN.md`.
 - Dilanka Facebook photo galleries, hero photo controls and click-to-play embedded company films.
 - Interactive route maps on departures and seat selection, with stop focus, boarding/drop-off highlights and illustrative E01 sections. See `research/MEDIA_AND_MAPS.md` for sources and map limitations.
 - Dated trip search, supported intermediate stop pairs, sort and time/layout filters.

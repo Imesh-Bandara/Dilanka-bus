@@ -84,7 +84,7 @@ export function Site({ children }: { children: React.ReactNode }) {
         <span className="strip-divider">/</span> Explore freely. All bookings
         are demonstrations.
       </div>
-      <header className="header">
+      <header className={pathname === "/" ? "header header-home" : "header"}>
         <div className="container nav">
           <Link href="/" className="brand" aria-label="Dilanka Express home">
             <img src="/images/logo.jpg" alt="DE" />
@@ -102,9 +102,24 @@ export function Site({ children }: { children: React.ReactNode }) {
             >
               {t.routes}
             </Link>
-            <Link href="/fleet">{t.fleet}</Link>
-            <Link href="/about">{t.about}</Link>
-            <Link href="/contact">{t.contact}</Link>
+            <Link
+              className={pathname === "/fleet" ? "active" : ""}
+              href="/fleet"
+            >
+              {t.fleet}
+            </Link>
+            <Link
+              className={pathname === "/about" ? "active" : ""}
+              href="/about"
+            >
+              {t.about}
+            </Link>
+            <Link
+              className={pathname === "/contact" ? "active" : ""}
+              href="/contact"
+            >
+              {t.contact}
+            </Link>
           </nav>
           <div className="nav-actions">
             <select
@@ -136,7 +151,15 @@ export function Site({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </header>
-      <main>{children}</main>
+      <main
+        className={
+          pathname === "/"
+            ? "home-content"
+            : `interior-content interior-${pathname.split("/")[1] || "page"}`
+        }
+      >
+        {children}
+      </main>
       <footer>
         <div className="container footer-top">
           <div>
@@ -263,6 +286,15 @@ export function PageTitle({
 }) {
   return (
     <div className="page-title container">
+      <div className="breadcrumbs">
+        <Link href="/">Home</Link>
+        <span>/</span>
+        <span>
+          {eyebrow.includes("TICKET") || title.includes("ticket")
+            ? "Your ticket"
+            : "Your journey"}
+        </span>
+      </div>
       <span className="eyebrow">{eyebrow}</span>
       <h1>{title}</h1>
       <p>{description}</p>

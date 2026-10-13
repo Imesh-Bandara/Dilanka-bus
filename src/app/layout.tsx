@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Site } from "@/components/site";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
+import "./landing.css";
+import "./interior.css";
 export const metadata: Metadata = {
   title: {
     default: "Dilanka Express — A better way to journey",

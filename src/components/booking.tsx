@@ -295,6 +295,7 @@ export function BookPage({ id }: { id: string }) {
               step === i + 1 ? "current" : step > i + 1 ? "complete" : ""
             }
             key={label}
+            aria-current={step === i + 1 ? "step" : undefined}
           >
             <span>{step > i + 1 ? <Check size={15} /> : i + 1}</span>
             {label}
@@ -599,6 +600,11 @@ export function BookPage({ id }: { id: string }) {
         </div>
         <aside className="booking-summary">
           <div className="panel">
+            <img
+              className="summary-coach-photo"
+              src="/images/dilanka-fleet-original.webp"
+              alt="Dilanka fleet reference photograph"
+            />
             <span className="eyebrow">YOUR JOURNEY AT A GLANCE</span>
             <h3>
               {trip.route.origin} → {trip.route.destination}
@@ -989,54 +995,84 @@ export function FindTicket() {
         title="Find your ticket."
         description="No account needed. Use the details saved when you booked."
       />
-      <form
-        className="panel recovery-form container"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setBusy(true);
-          setError("");
-          try {
-            const b = await api<Booking>(
-              `bookings/${encodeURIComponent(reference.trim().toUpperCase())}`,
-              { headers: { "x-booking-access": code.trim() } },
-            );
-            location.assign(`/ticket/${b.id}#access=${code.trim()}`);
-          } catch (e) {
-            setError((e as Error).message);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        {error && <Notice type="error">{error}</Notice>}
-        <label>
-          Booking reference
-          <input
-            required
-            value={reference}
-            onChange={(e) => setReference(e.target.value)}
-            placeholder="DE-XXXXXXXXXX"
+      <section className="container recovery-layout">
+        <div className="recovery-story">
+          <img
+            src="/images/dilanka-hills.webp"
+            alt="Dilanka coach travelling through the hills"
           />
-        </label>
-        <label>
-          Private access code
-          <input
-            required
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="The code shown on confirmation"
-          />
-        </label>
-        <button className="button button-dark full-width" disabled={busy}>
-          {busy ? "Finding your tickets…" : "Find my tickets"}
-          <ArrowRight size={17} />
-        </button>
-        <p className="small-note">
-          Lost your code? This prototype does not send recovery emails. Keep
-          your original private ticket link, or ask the demo administrator for
-          help.
-        </p>
-      </form>
+          <div>
+            <Ticket size={28} />
+            <h2>
+              Your next chapter.
+              <br />
+              <em>Saved right here.</em>
+            </h2>
+            <p>
+              A seat, a journey, and a ticket to keep close. Return to your
+              booking whenever you need it.
+            </p>
+          </div>
+        </div>
+        <form
+          className="panel recovery-form"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setBusy(true);
+            setError("");
+            try {
+              const b = await api<Booking>(
+                `bookings/${encodeURIComponent(reference.trim().toUpperCase())}`,
+                { headers: { "x-booking-access": code.trim() } },
+              );
+              location.assign(`/ticket/${b.id}#access=${code.trim()}`);
+            } catch (e) {
+              setError((e as Error).message);
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          <span className="eyebrow">WELCOME BACK</span>
+          <h2>Let’s find your journey.</h2>
+          <p className="recovery-intro">
+            Enter both details from your booking confirmation. Your private code
+            protects your passenger information.
+          </p>
+          {error && <Notice type="error">{error}</Notice>}
+          <label>
+            Booking reference
+            <input
+              required
+              value={reference}
+              onChange={(e) => setReference(e.target.value)}
+              placeholder="DE-XXXXXXXXXX"
+            />
+          </label>
+          <label>
+            Private access code
+            <input
+              required
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="The code shown on confirmation"
+            />
+          </label>
+          <button className="button button-dark full-width" disabled={busy}>
+            {busy ? "Finding your tickets…" : "Find my tickets"}
+            <ArrowRight size={17} />
+          </button>
+          <p className="small-note">
+            Lost your code? This prototype does not send recovery emails. Keep
+            your original private ticket link, or ask the demo administrator for
+            help.
+          </p>
+          <Link href="/help" className="text-link">
+            Need a little guidance?
+            <ArrowRight size={16} />
+          </Link>
+        </form>
+      </section>
       <div className="spacer" />
     </>
   );
@@ -1054,6 +1090,12 @@ export function VerifyPage({ token }: { token: string }) {
   return (
     <div className="container verification-wrap">
       <div className="panel verification">
+        <div className="verification-brand">
+          <img src="/images/logo.jpg" alt="Dilanka Express" />
+          <span>
+            DILANKA EXPRESS<small>YOUR JOURNEY · VERIFIED</small>
+          </span>
+        </div>
         <span className={`success-icon ${!valid ? "cancelled" : ""}`}>
           {valid ? <CheckCircle2 size={35} /> : <XCircle size={35} />}
         </span>

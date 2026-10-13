@@ -117,59 +117,79 @@ export function Staff() {
   if (!user)
     return (
       <div className="staff-login-wrap">
-        <form
-          className="staff-login panel"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            setBusy(true);
-            setError("");
-            try {
-              setUser(await post("staff/login", { username, password }));
-              setPassword("");
-              await load();
-            } catch (e) {
-              setError((e as Error).message);
-            } finally {
-              setBusy(false);
-            }
-          }}
-        >
-          <span className="staff-icon">
-            <ShieldCheck size={28} />
-          </span>
-          <span className="eyebrow">DILANKA EXPRESS · OPERATIONS</span>
-          <h1>
-            A smooth journey
-            <br />
-            starts behind the scenes.
-          </h1>
-          <p>Sign in to manage demo departures and tickets.</p>
-          {error && <Notice type="error">{error}</Notice>}
-          <label>
-            Username
-            <input
-              autoComplete="username"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+        <div className="container staff-login-grid">
+          <div className="staff-welcome">
+            <img
+              src="/images/dilanka-lineup.webp"
+              alt="Dilanka Express team and fleet"
             />
-          </label>
-          <label>
-            Password
-            <input
-              autoComplete="current-password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <button disabled={busy} className="button button-dark full-width">
-            {busy ? "Signing in…" : "Sign in to staff portal"}
-            <ArrowRight size={17} />
-          </button>
-          <small>Access is provided by the prototype administrator.</small>
-        </form>
+            <div>
+              <span className="eyebrow">THE PEOPLE BEHIND THE JOURNEY</span>
+              <h2>
+                Every good journey
+                <br />
+                <em>starts with you.</em>
+              </h2>
+              <p>
+                The Dilanka journey desk. Departures, passengers and a warm
+                welcome, all in one place.
+              </p>
+            </div>
+          </div>
+          <form
+            className="staff-login panel"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setBusy(true);
+              setError("");
+              try {
+                setUser(await post("staff/login", { username, password }));
+                setPassword("");
+                await load();
+              } catch (e) {
+                setError((e as Error).message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+          >
+            <span className="staff-icon">
+              <ShieldCheck size={28} />
+            </span>
+            <span className="eyebrow">DILANKA EXPRESS · OPERATIONS</span>
+            <h1>
+              Welcome to
+              <br />
+              <em>the journey desk.</em>
+            </h1>
+            <p>Sign in to manage demo departures and tickets.</p>
+            {error && <Notice type="error">{error}</Notice>}
+            <label>
+              Username
+              <input
+                autoComplete="username"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                autoComplete="current-password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            <button disabled={busy} className="button button-dark full-width">
+              {busy ? "Signing in…" : "Sign in to staff portal"}
+              <ArrowRight size={17} />
+            </button>
+            <small>Access is provided by the prototype administrator.</small>
+          </form>
+        </div>
       </div>
     );
   if (!data) return <Loading />;
@@ -296,7 +316,7 @@ export function Staff() {
               <div className="panel">
                 <span>Confirmed bookings</span>
                 <strong>{confirmed.length}</strong>
-                <small>Saved in PostgreSQL</small>
+                <small>Confirmed in this preview</small>
               </div>
               <div className="panel">
                 <span>Seats reserved</span>
