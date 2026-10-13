@@ -74,3 +74,13 @@ See README.md for setup, staff credentials location and the client demonstration
 - Inspected the existing demo boarding pass at mobile width: QR image retained a white background. Reviewed the dark public verification and authenticated staff overview. No real bookings or staff settings were changed for these checks.
 - Sampled rendered text contrast on primary page types and corrected dark-mode search selects, landing utility links and metadata. Map tiles, photos and QR pixels are not filtered or inverted; print styling keeps boarding passes on white paper.
 - Research, interaction details and scope are recorded in `research/NAVIGATION_AND_THEME.md`.
+
+## Full Sinhala and Tamil content
+
+- Added a shared bilingual translation catalogue, dynamic-message/status translations and explicit presentation-text calls across the public site, booking, ticket recovery, QR verification, media, maps and staff components. Passenger input and canonical booking/form values remain unchanged.
+- Saved language preferences now also initialise server-rendered pages through a same-site cookie. Local fonts, translated native field errors, metadata and responsive wrapping support both scripts.
+- Reviewed eight public page types at 360 px in each language, and Sinhala/Tamil headers at 1280 px in light/dark mode. Corrected a Tamil booking-review overflow and compacted navigation labels.
+- A local QA booking covered Tamil search, Sinhala seat holding, switching languages without losing seats/passenger input, Tamil confirmation/PDF download, public QR verification and reference/code recovery. Cancelled only that QA booking afterwards to release its seat.
+- Rendered Sinhala and Tamil PDF fixtures with Poppler and visually reviewed them. Replaced the old font shaper to fix its crash on Sinhala independent vowels; regression checks generate PDFs in all three languages.
+- All 17 tests pass. The final production build and TypeScript validation pass. Reviewed the translated staff sign-in; authenticated staff actions were not exercised or changed during UI verification.
+- See `research/LOCALIZATION.md` for catalogue conventions, technical boundaries and the local PDF QA fixture command.

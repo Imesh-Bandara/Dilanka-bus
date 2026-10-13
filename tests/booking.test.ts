@@ -222,8 +222,12 @@ test("QR payload decodes and PDF supports Sinhala and Tamil names", async () => 
       data[offset + 3] = 255;
     }
   assert.equal(jsQR(data, width, width)?.data, url);
-  const bytes = await ticketPdf(booking, "https://demo.example");
-  const pdf = await PDFDocument.load(bytes);
-  assert.equal(pdf.getPageCount(), 2);
-  assert.ok(bytes.length > 10000);
+  for (const lang of ["en", "si", "ta"] as const) {
+    // Includes independent Sinhala vowels in labels (e.g. ඔබේ), which crashed
+    // the older font shaper even when ordinary passenger names worked.
+    const bytes = await ticketPdf(booking, "https://demo.example", 30, lang);
+    const pdf = await PDFDocument.load(bytes);
+    assert.equal(pdf.getPageCount(), 2);
+    assert.ok(bytes.length > 10000);
+  }
 });

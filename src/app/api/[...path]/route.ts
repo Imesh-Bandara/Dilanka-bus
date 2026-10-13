@@ -96,6 +96,11 @@ async function handler(req: NextRequest) {
             b,
             process.env.APP_URL || req.nextUrl.origin,
             (await service.policy()).arrivalMinutes,
+            search.get("lang") === "si"
+              ? "si"
+              : search.get("lang") === "ta"
+                ? "ta"
+                : "en",
           ),
           {
             headers: {

@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
@@ -107,37 +108,40 @@ const titles: Record<
   },
 };
 function PhotoHeading({ kind }: { kind: string }) {
+  const tr = useTranslation();
   const p = titles[kind] || titles.help;
   return (
     <section className={`inner-hero inner-hero-${kind}`}>
       <div className="container inner-hero-grid">
         <div className="inner-hero-copy">
           <div className="breadcrumbs">
-            <Link href="/">Home</Link>
+            <Link href="/">{tr("Home")}</Link>
             <span>/</span>
             <span>
-              {kind === "help"
-                ? "Help & policies"
-                : kind === "about"
-                  ? "Our story"
-                  : kind === "contact"
-                    ? "Contact"
-                    : `Our ${kind}`}
+              {tr(
+                kind === "help"
+                  ? "Help & policies"
+                  : kind === "about"
+                    ? "Our story"
+                    : kind === "contact"
+                      ? "Contact"
+                      : `Our ${kind}`,
+              )}
             </span>
           </div>
-          <span className="eyebrow">{p.eyebrow}</span>
+          <span className="eyebrow">{tr(p.eyebrow)}</span>
           <h1>
-            {p.title}
-            <em>{p.accent}</em>
+            {tr(p.title)}
+            <em>{tr(p.accent)}</em>
           </h1>
-          <p>{p.description}</p>
+          <p>{tr(p.description)}</p>
           <span className="inner-signature">
-            <span /> DILANKA EXPRESS · SRI LANKA
+            <span /> {tr(" DILANKA EXPRESS · SRI LANKA ")}
           </span>
         </div>
         <div className="inner-hero-photo">
-          <img src={p.image} alt={p.alt} />
-          <span>THE ROAD AHEAD, WITH DILANKA.</span>
+          <img src={p.image} alt={tr(p.alt)} />
+          <span>{tr("THE ROAD AHEAD, WITH DILANKA.")}</span>
         </div>
       </div>
     </section>
@@ -148,13 +152,16 @@ function Assistance({
 }: {
   title?: string;
 }) {
+  const tr = useTranslation();
   return (
     <section className="container inner-assistance">
       <div>
-        <span className="eyebrow">WE’RE HERE TO HELP</span>
-        <h2>{title}</h2>
+        <span className="eyebrow">{tr("WE’RE HERE TO HELP")}</span>
+        <h2>{tr(title)}</h2>
         <p>
-          For current services and real travel arrangements, talk to the team.
+          {tr(
+            " For current services and real travel arrangements, talk to the team. ",
+          )}
         </p>
       </div>
       <a className="button button-dark" href="tel:+94777914680">
@@ -166,6 +173,7 @@ function Assistance({
   );
 }
 function FleetCoach({ bus: b, index }: { bus: Bus; index: number }) {
+  const tr = useTranslation();
   return (
     <article className="coach-profile">
       <div className="coach-photo">
@@ -175,41 +183,52 @@ function FleetCoach({ bus: b, index }: { bus: Bus; index: number }) {
               ? "/images/dilanka-fleet-original.webp"
               : "/images/fleet.webp"
           }
-          alt="Dilanka fleet reference photograph; vehicle assignment is illustrative"
+          alt={tr(
+            "Dilanka fleet reference photograph; vehicle assignment is illustrative",
+          )}
           loading="lazy"
         />
-        <span className="coach-index">0{index + 1} / THE FLEET</span>
+        <span className="coach-index">
+          0{tr(index + 1)} {tr(" / THE FLEET")}
+        </span>
       </div>
       <div className="coach-copy">
         <div className="coach-labels">
-          <span className="eyebrow">{b.registration}</span>
-          <span className="badge">{b.capacity} SEATS</span>
+          <span className="eyebrow">{tr(b.registration)}</span>
+          <span className="badge">
+            {tr(b.capacity)} {tr(" SEATS")}
+          </span>
         </div>
-        <h2>{b.name}</h2>
-        <p>A closer look at the space for your next journey.</p>
+        <h2>{tr(b.name)}</h2>
+        <p>{tr("A closer look at the space for your next journey.")}</p>
         <div className="coach-amenities">
           {b.amenities.map((a) => (
             <span key={a}>
               <Check size={16} />
-              {a}
+              {tr(a)}
             </span>
           ))}
         </div>
         <p className="small-note">
-          {b.id === "ne3230"
-            ? "Seat chart observed on Magiya. Upcoming assignments remain demonstrations."
-            : "Sample seat template and fictional demo vehicle assignment."}{" "}
-          Fleet photographs are references.
+          {tr(
+            b.id === "ne3230"
+              ? "Seat chart observed on Magiya. Upcoming assignments remain demonstrations."
+              : "Sample seat template and fictional demo vehicle assignment.",
+          )}
+          {tr(" ")}
+          {tr(" Fleet photographs are references. ")}
         </p>
         <details className="coach-layout">
           <summary>
             <Armchair size={17} />
-            Explore the {b.capacity}-seat layout
+            {tr(" Explore the ")}
+            {tr(b.capacity)}
+            {tr("-seat layout ")}
             <ChevronDown size={16} />
           </summary>
           <div className="mini-coach">
             <span className="mini-coach-front">
-              <BusFront size={17} /> FRONT · DRIVER
+              <BusFront size={17} /> {tr(" FRONT · DRIVER ")}
             </span>
             {b.layout.map((row, i) => (
               <div className="mini-seat-row" key={i}>
@@ -221,19 +240,21 @@ function FleetCoach({ bus: b, index }: { bus: Bus; index: number }) {
                     }}
                     className={seat ? "mini-seat" : "mini-seat-space"}
                   >
-                    {seat ? String(seat).padStart(2, "0") : ""}
+                    {tr(seat ? String(seat).padStart(2, "0") : "")}
                   </span>
                 ))}
               </div>
             ))}
-            <small>REAR · REFERENCE LAYOUT</small>
+            <small>{tr("REAR · REFERENCE LAYOUT")}</small>
           </div>
           <p className="small-note">
-            Preview only. Available seats are shown for your chosen departure.
+            {tr(
+              " Preview only. Available seats are shown for your chosen departure. ",
+            )}
           </p>
         </details>
         <Link className="text-link" href="/search">
-          Find a journey
+          {tr(" Find a journey ")}
           <ArrowRight size={17} />
         </Link>
       </div>
@@ -242,6 +263,7 @@ function FleetCoach({ bus: b, index }: { bus: Bus; index: number }) {
 }
 
 export function InformationPages({ kind }: { kind: string }) {
+  const tr = useTranslation();
   const [routes, setRoutes] = useState(sampleRoutes),
     [fleet, setFleet] = useState(sampleBuses),
     [query, setQuery] = useState(""),
@@ -320,11 +342,13 @@ export function InformationPages({ kind }: { kind: string }) {
   const matchingFaqs = faqs.filter(
     (f) =>
       (category === "all" || category === f.category) &&
-      `${f.q} ${f.a}`.toLowerCase().includes(query.toLowerCase()),
+      `${f.q} ${f.a} ${tr(f.q)} ${tr(f.a)}`
+        .toLowerCase()
+        .includes(query.toLowerCase()),
   );
   const matchingRoutes = routes.filter(
     (r) =>
-      `${r.origin} ${r.destination} ${r.via} ${r.stops.map((s) => s.name).join(" ")}`
+      `${r.origin} ${r.destination} ${r.via} ${r.stops.map((s) => s.name).join(" ")} ${tr(r.origin)} ${tr(r.destination)} ${tr(r.via)} ${r.stops.map((s) => tr(s.name)).join(" ")}`
         .toLowerCase()
         .includes(query.toLowerCase()) &&
       (category === "all" ||
@@ -337,11 +361,11 @@ export function InformationPages({ kind }: { kind: string }) {
         <section className="container inner-section">
           <div className="inner-section-heading">
             <div>
-              <span className="eyebrow">FIND YOUR CONNECTION</span>
-              <h2>Where will the road take you?</h2>
+              <span className="eyebrow">{tr("FIND YOUR CONNECTION")}</span>
+              <h2>{tr("Where will the road take you?")}</h2>
             </div>
             <Link href="/search" className="text-link">
-              All departures
+              {tr(" All departures ")}
               <ArrowUpRight size={18} />
             </Link>
           </div>
@@ -349,13 +373,13 @@ export function InformationPages({ kind }: { kind: string }) {
             <label className="browse-search">
               <Search size={18} />
               <input
-                aria-label="Search routes"
-                placeholder="Search a town or route…"
+                aria-label={tr("Search routes")}
+                placeholder={tr("Search a town or route…")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </label>
-            <div className="browse-tabs" aria-label="Route type">
+            <div className="browse-tabs" aria-label={tr("Route type")}>
               {[
                 ["all", "All routes"],
                 ["highway", "Expressway"],
@@ -366,15 +390,16 @@ export function InformationPages({ kind }: { kind: string }) {
                   aria-pressed={category === v}
                   onClick={() => setCategory(v)}
                 >
-                  {label}
+                  {tr(label)}
                 </button>
               ))}
             </div>
           </div>
           <p className="browse-count">
-            {matchingRoutes.length}{" "}
-            {matchingRoutes.length === 1 ? "corridor" : "corridors"} to explore
-            · sample timetable
+            {tr(matchingRoutes.length)}
+            {tr(" ")}
+            {tr(matchingRoutes.length === 1 ? "corridor" : "corridors")}{" "}
+            {tr(" to explore · sample timetable ")}
           </p>
           <div className="corridor-grid">
             {matchingRoutes.map((r, i) => (
@@ -382,13 +407,15 @@ export function InformationPages({ kind }: { kind: string }) {
                 <Link href={routeLink(r)} className="corridor-image">
                   <img
                     src={routePhoto(r)}
-                    alt={routePhotoAlt(r)}
+                    alt={tr(routePhotoAlt(r))}
                     loading="lazy"
                   />
                   <span className="corridor-tag">
-                    {expresswayRoute(r)
-                      ? "VIA EXPRESSWAY"
-                      : "MAIN-ROAD JOURNEY"}
+                    {tr(
+                      expresswayRoute(r)
+                        ? "VIA EXPRESSWAY"
+                        : "MAIN-ROAD JOURNEY",
+                    )}
                   </span>
                   <span className="corridor-open">
                     <ArrowUpRight size={22} />
@@ -396,27 +423,31 @@ export function InformationPages({ kind }: { kind: string }) {
                 </Link>
                 <div className="corridor-copy">
                   <span className="eyebrow">
-                    CORRIDOR {String(i + 1).padStart(2, "0")}
+                    {tr(" CORRIDOR ")}
+                    {tr(String(i + 1).padStart(2, "0"))}
                   </span>
                   <h3>
-                    {r.origin}
+                    {tr(r.origin)}
                     <ArrowRight size={20} />
-                    {r.destination}
+                    {tr(r.destination)}
                   </h3>
-                  <p>{r.via}</p>
+                  <p>{tr(r.via)}</p>
                   <div className="corridor-meta">
                     <span>
                       <Clock size={14} />
-                      {Math.floor(r.duration / 60)}h{" "}
-                      {r.duration % 60 ? `${r.duration % 60}m` : ""} sample
+                      {tr(Math.floor(r.duration / 60))}
+                      {tr("h")}
+                      {tr(" ")}
+                      {tr(r.duration % 60 ? `${r.duration % 60}m` : "")}{" "}
+                      {tr(" sample ")}
                     </span>
                     <span>
                       <MapPin size={14} />
-                      {r.stops.length} listed stops
+                      {tr(r.stops.length)} {tr(" listed stops ")}
                     </span>
                   </div>
                   <Link href={routeLink(r)} className="text-link">
-                    View departures
+                    {tr(" View departures ")}
                     <ArrowRight size={17} />
                   </Link>
                 </div>
@@ -427,8 +458,8 @@ export function InformationPages({ kind }: { kind: string }) {
           {!matchingRoutes.length && (
             <div className="empty-state">
               <MapPin size={35} />
-              <h3>No corridors found.</h3>
-              <p>Try another town or show all routes.</p>
+              <h3>{tr("No corridors found.")}</h3>
+              <p>{tr("Try another town or show all routes.")}</p>
               <button
                 className="button button-outline"
                 onClick={() => {
@@ -436,44 +467,47 @@ export function InformationPages({ kind }: { kind: string }) {
                   setCategory("all");
                 }}
               >
-                Reset filters
+                {tr(" Reset filters ")}
               </button>
             </div>
           )}
           <Notice>
-            Corridors are informed by company announcements. Upcoming schedules,
-            fares, vehicle assignments and stop times are sample data. Confirm
-            real travel with Dilanka.
+            {tr(
+              " Corridors are informed by company announcements. Upcoming schedules, fares, vehicle assignments and stop times are sample data. Confirm real travel with Dilanka. ",
+            )}
           </Notice>
           <details className="image-credits">
-            <summary>Destination photo credits</summary>
+            <summary>{tr("Destination photo credits")}</summary>
             <p>
-              Destination inspiration:{" "}
+              {tr(" Destination inspiration:")}
+              {tr(" ")}
               <a
                 href="https://unsplash.com/photos/lotus-tower-stands-tall-over-a-city-skyline-6iqB-y0EBCw"
                 target="_blank"
                 rel="noreferrer"
               >
-                Colombo
-              </a>{" "}
-              ·{" "}
+                {tr(" Colombo ")}
+              </a>
+              {tr(" ")}·{tr(" ")}
               <a
                 href="https://unsplash.com/photos/a-serene-lake-under-a-clear-blue-sky-haJVERPHkGE"
                 target="_blank"
                 rel="noreferrer"
               >
-                Kandy
-              </a>{" "}
-              ·{" "}
+                {tr(" Kandy ")}
+              </a>
+              {tr(" ")}·{tr(" ")}
               <a
                 href="https://unsplash.com/photos/aerial-view-of-a-tropical-beach-with-rocky-coastline-7II6rU76_3Q"
                 target="_blank"
                 rel="noreferrer"
               >
-                Sri Lankan coastline
-              </a>{" "}
-              via Unsplash. Dilanka photographs supplied by the client or
-              sourced from the company’s public page.
+                {tr(" Sri Lankan coastline ")}
+              </a>
+              {tr(" ")}
+              {tr(
+                " via Unsplash. Dilanka photographs supplied by the client or sourced from the company’s public page. ",
+              )}
             </p>
           </details>
         </section>
@@ -483,13 +517,13 @@ export function InformationPages({ kind }: { kind: string }) {
           <section className="container inner-section">
             <div className="inner-section-heading">
               <div>
-                <span className="eyebrow">MEET YOUR COACH</span>
-                <h2>Room for the road ahead.</h2>
+                <span className="eyebrow">{tr("MEET YOUR COACH")}</span>
+                <h2>{tr("Room for the road ahead.")}</h2>
               </div>
               <p>
-                Photos of the Dilanka fleet.
+                {tr(" Photos of the Dilanka fleet. ")}
                 <br />
-                Seat templates for this booking preview.
+                {tr(" Seat templates for this booking preview. ")}
               </p>
             </div>
             <div className="coach-profiles">
@@ -507,41 +541,43 @@ export function InformationPages({ kind }: { kind: string }) {
             <div className="company-story-image">
               <img
                 src="/images/dilanka-fleet-original.webp"
-                alt="Dilanka’s gold coaches lined up in Ampara"
+                alt={tr("Dilanka’s gold coaches lined up in Ampara")}
                 loading="lazy"
               />
-              <span>AMPARA, SRI LANKA · OUR HOME ON THE ROAD</span>
+              <span>{tr("AMPARA, SRI LANKA · OUR HOME ON THE ROAD")}</span>
             </div>
             <div>
-              <span className="eyebrow">DILANKA ENTERPRISES (PVT) LTD</span>
+              <span className="eyebrow">
+                {tr("DILANKA ENTERPRISES (PVT) LTD")}
+              </span>
               <h2>
-                More than a destination.
+                {tr(" More than a destination. ")}
                 <br />
-                <em>A connection.</em>
+                <em>{tr("A connection.")}</em>
               </h2>
               <p>
-                Dilanka Enterprises (Pvt) Ltd is based in Ampara. Its public
-                company profile describes normal, luxury, super luxury and
-                tourist services in Sri Lanka’s passenger transport sector.
+                {tr(
+                  " Dilanka Enterprises (Pvt) Ltd is based in Ampara. Its public company profile describes normal, luxury, super luxury and tourist services in Sri Lanka’s passenger transport sector. ",
+                )}
               </p>
               <p>
-                This preview brings the journey into one simple experience:
-                explore a corridor, choose a departure, find your seat, and keep
-                your QR ticket close.
+                {tr(
+                  " This preview brings the journey into one simple experience: explore a corridor, choose a departure, find your seat, and keep your QR ticket close. ",
+                )}
               </p>
               <Link href="/routes" className="text-link">
-                Discover our routes
+                {tr(" Discover our routes ")}
                 <ArrowRight size={18} />
               </Link>
             </div>
           </section>
           <section className="company-band">
             <div className="container">
-              <span className="eyebrow">A THOUGHTFUL WAY TO BOOK</span>
+              <span className="eyebrow">{tr("A THOUGHTFUL WAY TO BOOK")}</span>
               <h2>
-                A little care.
+                {tr(" A little care. ")}
                 <br />
-                <em>At every step.</em>
+                <em>{tr("At every step.")}</em>
               </h2>
               <div className="company-promises">
                 {[
@@ -565,8 +601,8 @@ export function InformationPages({ kind }: { kind: string }) {
                   return (
                     <div key={String(title)}>
                       <I size={25} />
-                      <h3>{String(title)}</h3>
-                      <p>{String(copy)}</p>
+                      <h3>{tr(String(title))}</h3>
+                      <p>{tr(String(copy))}</p>
                     </div>
                   );
                 })}
@@ -576,22 +612,23 @@ export function InformationPages({ kind }: { kind: string }) {
           <section className="container company-finish">
             <img
               src="/images/dilanka-lineup.webp"
-              alt="Dilanka Express team and fleet"
+              alt={tr("Dilanka Express team and fleet")}
               loading="lazy"
             />
             <div>
-              <span className="eyebrow">LET’S PLAN WHAT’S NEXT</span>
+              <span className="eyebrow">{tr("LET’S PLAN WHAT’S NEXT")}</span>
               <h2>
-                Your journey.
+                {tr(" Your journey. ")}
                 <br />
-                Our next conversation.
+                {tr(" Our next conversation. ")}
               </h2>
               <p>
-                Speak with the company for current departures, service details
-                and travel enquiries.
+                {tr(
+                  " Speak with the company for current departures, service details and travel enquiries. ",
+                )}
               </p>
               <Link className="button button-dark" href="/contact">
-                Meet the team, over a call
+                {tr(" Meet the team, over a call ")}
                 <ArrowUpRight size={17} />
               </Link>
             </div>
@@ -601,22 +638,23 @@ export function InformationPages({ kind }: { kind: string }) {
       {kind === "contact" && (
         <section className="container inner-section contact-editorial">
           <div className="contact-main">
-            <span className="eyebrow">TALK TO DILANKA</span>
+            <span className="eyebrow">{tr("TALK TO DILANKA")}</span>
             <h2>
-              A familiar voice.
+              {tr(" A familiar voice. ")}
               <br />
-              <em>A helpful answer.</em>
+              <em>{tr("A helpful answer.")}</em>
             </h2>
             <p>
-              Confirm a departure, ask about your boarding point, or discuss a
-              travel enquiry directly with the company.
+              {tr(
+                " Confirm a departure, ask about your boarding point, or discuss a travel enquiry directly with the company. ",
+              )}
             </p>
             <a className="contact-number" href="tel:+94777914680">
               0777 914680
               <ArrowUpRight size={28} />
             </a>
             <a className="contact-secondary" href="tel:+94777205634">
-              Alternative hotline · 0777 205634
+              {tr(" Alternative hotline · 0777 205634 ")}
               <ArrowUpRight size={16} />
             </a>
             <a
@@ -625,12 +663,13 @@ export function InformationPages({ kind }: { kind: string }) {
               rel="noreferrer"
               className="button button-dark"
             >
-              Open WhatsApp
+              {tr(" Open WhatsApp ")}
               <ArrowUpRight size={17} />
             </a>
             <p className="small-note">
-              WhatsApp opens a conversation for you to send. Current
-              availability and travel arrangements are confirmed by the team.
+              {tr(
+                " WhatsApp opens a conversation for you to send. Current availability and travel arrangements are confirmed by the team. ",
+              )}
             </p>
           </div>
           <div className="contact-methods">
@@ -640,9 +679,9 @@ export function InformationPages({ kind }: { kind: string }) {
             >
               <Mail size={24} />
               <div>
-                <span className="eyebrow">WRITE TO US</span>
-                <h3>Email the team</h3>
-                <p>dilankaexpress@gmail.com</p>
+                <span className="eyebrow">{tr("WRITE TO US")}</span>
+                <h3>{tr("Email the team")}</h3>
+                <p>{tr("dilankaexpress@gmail.com")}</p>
               </div>
               <ArrowUpRight size={20} />
             </a>
@@ -654,23 +693,25 @@ export function InformationPages({ kind }: { kind: string }) {
             >
               <MapPin size={24} />
               <div>
-                <span className="eyebrow">BASED IN AMPARA</span>
-                <h3>Our home</h3>
+                <span className="eyebrow">{tr("BASED IN AMPARA")}</span>
+                <h3>{tr("Our home")}</h3>
                 <p>
-                  BL-26, 3rd Lane
+                  {tr(" BL-26, 3rd Lane ")}
                   <br />
-                  Ampara, Sri Lanka
+                  {tr(" Ampara, Sri Lanka ")}
                 </p>
-                <small>Open address search in Maps</small>
+                <small>{tr("Open address search in Maps")}</small>
               </div>
               <ArrowUpRight size={20} />
             </a>
             <Link href="/help" className="contact-method">
               <Ticket size={24} />
               <div>
-                <span className="eyebrow">USING THE BOOKING PREVIEW?</span>
-                <h3>A little guidance</h3>
-                <p>Tickets, seat holds and draft policies.</p>
+                <span className="eyebrow">
+                  {tr("USING THE BOOKING PREVIEW?")}
+                </span>
+                <h3>{tr("A little guidance")}</h3>
+                <p>{tr("Tickets, seat holds and draft policies.")}</p>
               </div>
               <ArrowUpRight size={20} />
             </Link>
@@ -683,49 +724,52 @@ export function InformationPages({ kind }: { kind: string }) {
             <Link href="/find-ticket">
               <Ticket size={23} />
               <div>
-                <h3>Find my ticket</h3>
-                <p>Your reference & private code</p>
+                <h3>{tr("Find my ticket")}</h3>
+                <p>{tr("Your reference & private code")}</p>
               </div>
               <ArrowUpRight size={18} />
             </Link>
             <Link href="/routes">
               <MapPin size={23} />
               <div>
-                <h3>Explore the route</h3>
-                <p>Corridors, maps & listed stops</p>
+                <h3>{tr("Explore the route")}</h3>
+                <p>{tr("Corridors, maps & listed stops")}</p>
               </div>
               <ArrowUpRight size={18} />
             </Link>
             <Link href="/contact">
               <Phone size={23} />
               <div>
-                <h3>Speak to the team</h3>
-                <p>Real travel enquiries</p>
+                <h3>{tr("Speak to the team")}</h3>
+                <p>{tr("Real travel enquiries")}</p>
               </div>
               <ArrowUpRight size={18} />
             </Link>
           </div>
           <div className="help-editorial">
             <aside>
-              <span className="eyebrow">YOUR TRAVEL COMPANION</span>
+              <span className="eyebrow">{tr("YOUR TRAVEL COMPANION")}</span>
               <h2>
-                Good to know.
+                {tr(" Good to know. ")}
                 <br />
-                <em>Before you go.</em>
+                <em>{tr("Before you go.")}</em>
               </h2>
               <p>
-                Find an answer, then get back to looking forward to the journey.
+                {tr(
+                  " Find an answer, then get back to looking forward to the journey. ",
+                )}
               </p>
               <a href="#privacy" className="text-link">
-                Privacy in this preview
+                {tr(" Privacy in this preview ")}
                 <ArrowRight size={16} />
               </a>
               <div className="help-draft">
                 <ShieldCheck size={21} />
-                <h3>A preview, with clarity.</h3>
+                <h3>{tr("A preview, with clarity.")}</h3>
                 <p>
-                  All bookings are demonstrations. The policies below are
-                  editable draft rules awaiting client approval.
+                  {tr(
+                    " All bookings are demonstrations. The policies below are editable draft rules awaiting client approval. ",
+                  )}
                 </p>
               </div>
             </aside>
@@ -733,13 +777,16 @@ export function InformationPages({ kind }: { kind: string }) {
               <label className="browse-search">
                 <Search size={18} />
                 <input
-                  aria-label="Search help"
-                  placeholder="Search your question…"
+                  aria-label={tr("Search help")}
+                  placeholder={tr("Search your question…")}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
               </label>
-              <div className="browse-tabs help-tabs" aria-label="Help topics">
+              <div
+                className="browse-tabs help-tabs"
+                aria-label={tr("Help topics")}
+              >
                 {[
                   ["all", "All questions"],
                   ["booking", "Booking"],
@@ -751,7 +798,7 @@ export function InformationPages({ kind }: { kind: string }) {
                     aria-pressed={category === v}
                     onClick={() => setCategory(v)}
                   >
-                    {label}
+                    {tr(label)}
                   </button>
                 ))}
               </div>
@@ -759,17 +806,17 @@ export function InformationPages({ kind }: { kind: string }) {
                 {matchingFaqs.map((f) => (
                   <details key={f.q}>
                     <summary>
-                      {f.q}
+                      {tr(f.q)}
                       <ChevronDown size={18} />
                     </summary>
-                    <p>{f.a}</p>
+                    <p>{tr(f.a)}</p>
                   </details>
                 ))}
               </div>
               {!matchingFaqs.length && (
                 <div className="empty-state">
-                  <h3>No matching answers yet.</h3>
-                  <p>Try a different word or contact the team.</p>
+                  <h3>{tr("No matching answers yet.")}</h3>
+                  <p>{tr("Try a different word or contact the team.")}</p>
                   <button
                     className="text-link"
                     onClick={() => {
@@ -777,7 +824,7 @@ export function InformationPages({ kind }: { kind: string }) {
                       setCategory("all");
                     }}
                   >
-                    Show all questions
+                    {tr(" Show all questions ")}
                     <ArrowRight size={16} />
                   </button>
                 </div>
@@ -787,20 +834,19 @@ export function InformationPages({ kind }: { kind: string }) {
           <div className="privacy-editorial" id="privacy">
             <ShieldCheck size={28} />
             <div>
-              <span className="eyebrow">YOUR DETAILS, HANDLED WITH CARE</span>
-              <h2>Privacy in this prototype.</h2>
+              <span className="eyebrow">
+                {tr("YOUR DETAILS, HANDLED WITH CARE")}
+              </span>
+              <h2>{tr("Privacy in this prototype.")}</h2>
               <p>
-                Names and contact details entered here are stored for the demo
-                booking and visible to authorised staff. Public QR pages do not
-                show phone numbers or email addresses. Use fictional passenger
-                details for demonstrations. No card or identity-document details
-                are collected.
+                {tr(
+                  " Names and contact details entered here are stored for the demo booking and visible to authorised staff. Public QR pages do not show phone numbers or email addresses. Use fictional passenger details for demonstrations. No card or identity-document details are collected. ",
+                )}
               </p>
               <p>
-                Keep your private booking link and access code to yourself.
-                Contact the project owner to remove demo records. This notice
-                describes the prototype; approved company privacy and booking
-                policies are still required before public launch.
+                {tr(
+                  " Keep your private booking link and access code to yourself. Contact the project owner to remove demo records. This notice describes the prototype; approved company privacy and booking policies are still required before public launch. ",
+                )}
               </p>
             </div>
           </div>

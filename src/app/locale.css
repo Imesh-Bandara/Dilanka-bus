@@ -1,0 +1,179 @@
+@font-face {
+  font-family: "Dilanka Sinhala";
+  src: url("/fonts/sinhala.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Dilanka Tamil";
+  src: url("/fonts/tamil.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+html:lang(si) {
+  --locale-font: "Dilanka Sinhala", "DM Sans", sans-serif;
+}
+html:lang(ta) {
+  --locale-font: "Dilanka Tamil", "DM Sans", sans-serif;
+}
+html:not(:lang(en))
+  :is(
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    em,
+    input,
+    select,
+    textarea,
+    button,
+    .brand,
+    .brand-sub,
+    .last-call-signature,
+    .luxe-explore,
+    .qr-verify-link
+  ) {
+  font-family: var(--locale-font);
+  letter-spacing: normal;
+}
+html:not(:lang(en)) :is(h1, h2, h3, h4) {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+html:not(:lang(en))
+  :is(
+    p,
+    label,
+    summary,
+    button,
+    .button,
+    .primary-nav-link,
+    .header-ticket,
+    .header-book
+  ) {
+  line-height: 1.75;
+}
+html:not(:lang(en)) .eyebrow {
+  letter-spacing: 0.035em;
+  line-height: 1.9;
+}
+html:not(:lang(en)) .demo-strip {
+  letter-spacing: normal;
+  line-height: 1.8;
+}
+html:not(:lang(en)) .luxe-hero h1 {
+  font-size: clamp(35px, 5vw, 76px);
+  line-height: 1.5;
+}
+html:not(:lang(en)) .inner-hero h1 {
+  font-size: clamp(32px, 4vw, 64px);
+}
+html:not(:lang(en))
+  :is(
+    .luxe-section-head h2,
+    .luxe-comfort h2,
+    .luxe-story h2,
+    .luxe-faq h2,
+    .luxe-last-call h2
+  ) {
+  font-size: clamp(30px, 3.3vw, 52px);
+}
+html:not(:lang(en))
+  :is(
+    .header-book,
+    .header-ticket,
+    .button,
+    .browse-tabs button,
+    .destination-filters button
+  ) {
+  white-space: normal;
+  text-align: center;
+}
+html:not(:lang(en)) .brand-sub {
+  font-size: 10px;
+}
+html:not(:lang(en)) .primary-nav-link {
+  font-size: 14px;
+  padding-inline: 14px;
+}
+html:not(:lang(en))
+  :is(
+    .booking-progress > div,
+    .trip-main > div,
+    .luxe-hero-copy,
+    .luxe-hero-aside
+  ) {
+  min-width: 0;
+}
+html:not(:lang(en)) .booking-progress {
+  gap: 12px;
+}
+html:not(:lang(en)) .booking-layout > * {
+  min-width: 0;
+}
+html:not(:lang(en))
+  :is(.booking-progress > div, .review-list dd, .pass-fields > div) {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+html:not(:lang(en)) .button-row {
+  flex-wrap: wrap;
+}
+html:not(:lang(en)) .button-row .button {
+  min-width: 0;
+  flex: 1 1 170px;
+}
+html:not(:lang(en)) .trip-time span {
+  overflow-wrap: anywhere;
+}
+html:not(:lang(en)) .destination-filters {
+  flex-wrap: wrap;
+}
+html:not(:lang(en)) .header-language select {
+  font-family: "Dilanka Sinhala", "Dilanka Tamil", sans-serif;
+}
+@media (max-width: 700px) {
+  html:not(:lang(en)) .demo-strip {
+    flex-wrap: wrap;
+    gap: 2px 7px;
+    padding: 6px 14px;
+    font-size: 10px;
+  }
+  html:not(:lang(en)) .demo-strip .demo-message {
+    flex-basis: 100%;
+  }
+  html:not(:lang(en)) .demo-strip .strip-divider {
+    display: none;
+  }
+  html:not(:lang(en)) .luxe-hero h1 {
+    font-size: clamp(31px, 8.5vw, 52px);
+  }
+  html:not(:lang(en))
+    :is(.inner-hero h1, .page-title h1, .confirmation-heading h1) {
+    font-size: clamp(28px, 7.5vw, 42px);
+  }
+  html:not(:lang(en)) .brand {
+    font-size: 17px;
+  }
+  html:not(:lang(en)) .brand-sub {
+    font-size: 8px;
+  }
+  html:not(:lang(en)) .booking-progress > div {
+    font-size: 12px;
+  }
+  html:not(:lang(en)) .booking-progress > div > span {
+    flex-shrink: 0;
+  }
+  html:not(:lang(en)) .luxe-reassurance {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  html:not(:lang(en)) .luxe-hero-actions {
+    flex-wrap: wrap;
+  }
+  html:not(:lang(en)) .trip-price strong {
+    font-size: 24px;
+  }
+}

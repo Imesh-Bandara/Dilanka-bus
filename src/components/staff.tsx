@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -60,6 +61,7 @@ type StaffData = {
   role: string;
 };
 export function Staff() {
+  const tr = useTranslation();
   const [user, setUser] = useState<{ id: string; role: string } | null>(null),
     [ready, setReady] = useState(false),
     [username, setUsername] = useState("admin"),
@@ -121,18 +123,21 @@ export function Staff() {
           <div className="staff-welcome">
             <img
               src="/images/dilanka-lineup.webp"
-              alt="Dilanka Express team and fleet"
+              alt={tr("Dilanka Express team and fleet")}
             />
             <div>
-              <span className="eyebrow">THE PEOPLE BEHIND THE JOURNEY</span>
+              <span className="eyebrow">
+                {tr("THE PEOPLE BEHIND THE JOURNEY")}
+              </span>
               <h2>
-                Every good journey
+                {tr(" Every good journey ")}
                 <br />
-                <em>starts with you.</em>
+                <em>{tr("starts with you.")}</em>
               </h2>
               <p>
-                The Dilanka journey desk. Departures, passengers and a warm
-                welcome, all in one place.
+                {tr(
+                  " The Dilanka journey desk. Departures, passengers and a warm welcome, all in one place. ",
+                )}
               </p>
             </div>
           </div>
@@ -156,16 +161,18 @@ export function Staff() {
             <span className="staff-icon">
               <ShieldCheck size={28} />
             </span>
-            <span className="eyebrow">DILANKA EXPRESS · OPERATIONS</span>
+            <span className="eyebrow">
+              {tr("DILANKA EXPRESS · OPERATIONS")}
+            </span>
             <h1>
-              Welcome to
+              {tr(" Welcome to ")}
               <br />
-              <em>the journey desk.</em>
+              <em>{tr("the journey desk.")}</em>
             </h1>
-            <p>Sign in to manage demo departures and tickets.</p>
-            {error && <Notice type="error">{error}</Notice>}
+            <p>{tr("Sign in to manage demo departures and tickets.")}</p>
+            {error && <Notice type="error">{tr(error)}</Notice>}
             <label>
-              Username
+              {tr(" Username ")}
               <input
                 autoComplete="username"
                 required
@@ -174,7 +181,7 @@ export function Staff() {
               />
             </label>
             <label>
-              Password
+              {tr(" Password ")}
               <input
                 autoComplete="current-password"
                 type="password"
@@ -184,10 +191,12 @@ export function Staff() {
               />
             </label>
             <button disabled={busy} className="button button-dark full-width">
-              {busy ? "Signing in…" : "Sign in to staff portal"}
+              {tr(busy ? "Signing in…" : "Sign in to staff portal")}
               <ArrowRight size={17} />
             </button>
-            <small>Access is provided by the prototype administrator.</small>
+            <small>
+              {tr("Access is provided by the prototype administrator.")}
+            </small>
           </form>
         </div>
       </div>
@@ -221,14 +230,16 @@ export function Staff() {
   function csv() {
     if (!trip) return;
     const lines = [
-      ["Reference", "Passenger", "Seat", "Phone", "Status"],
+      ["Reference", "Passenger", "Seat", "Phone", "Status"].map((label) =>
+        tr(label),
+      ),
       ...manifest.flatMap((b) =>
         b.tickets.map((t) => [
           b.reference,
           t.passenger,
           String(t.seat),
           b.phone,
-          t.status,
+          tr(t.status),
         ]),
       ),
     ];
@@ -248,8 +259,8 @@ export function Staff() {
   return (
     <div className="staff-shell">
       <aside className="staff-sidebar">
-        <span className="eyebrow">OPERATIONS</span>
-        <h2>The journey desk.</h2>
+        <span className="eyebrow">{tr("OPERATIONS")}</span>
+        <h2>{tr("The journey desk.")}</h2>
         <nav>
           {tabs.map(([key, label, Icon]) => (
             <button
@@ -262,16 +273,16 @@ export function Staff() {
               }}
             >
               <Icon size={19} />
-              {label}
+              {tr(label)}
             </button>
           ))}
         </nav>
         <div className="staff-user">
-          <span className="avatar">{user.id[0].toUpperCase()}</span>
+          <span className="avatar">{tr(user.id[0].toUpperCase())}</span>
           <div>
-            <strong>{user.id}</strong>
+            <strong>{tr(user.id)}</strong>
             <small>
-              {user.role === "admin" ? "Administrator" : "Check-in staff"}
+              {tr(user.role === "admin" ? "Administrator" : "Check-in staff")}
             </small>
           </div>
         </div>
@@ -284,82 +295,83 @@ export function Staff() {
           }}
         >
           <LogOut size={16} />
-          Sign out
+          {tr(" Sign out ")}
         </button>
       </aside>
       <div className="staff-content">
         <div className="staff-title">
           <div>
             <span className="eyebrow">
-              DEMO OPERATIONS · NO LIVE TRANSACTIONS
+              {tr(" DEMO OPERATIONS · NO LIVE TRANSACTIONS ")}
             </span>
-            <h1>{tabs.find((t) => t[0] === tab)?.[1]}</h1>
+            <h1>{tr(tabs.find((t) => t[0] === tab)?.[1])}</h1>
           </div>
           <button
             className="button button-outline"
             onClick={() => load().catch((e) => setError(e.message))}
           >
             <RefreshCw size={16} />
-            Refresh
+            {tr(" Refresh ")}
           </button>
         </div>
-        {error && <Notice type="error">{error}</Notice>}
+        {error && <Notice type="error">{tr(error)}</Notice>}
         {success && (
           <Notice type="success">
             <CheckCircle2 size={17} />
-            {success}
+            {tr(success)}
           </Notice>
         )}
         {tab === "overview" && (
           <>
             <div className="stats-grid">
               <div className="panel">
-                <span>Confirmed bookings</span>
-                <strong>{confirmed.length}</strong>
-                <small>Confirmed in this preview</small>
+                <span>{tr("Confirmed bookings")}</span>
+                <strong>{tr(confirmed.length)}</strong>
+                <small>{tr("Confirmed in this preview")}</small>
               </div>
               <div className="panel">
-                <span>Seats reserved</span>
+                <span>{tr("Seats reserved")}</span>
                 <strong>
-                  {confirmed.reduce((s, b) => s + b.tickets.length, 0)}
+                  {tr(confirmed.reduce((s, b) => s + b.tickets.length, 0))}
                 </strong>
-                <small>Across demo departures</small>
+                <small>{tr("Across demo departures")}</small>
               </div>
               <div className="panel">
-                <span>Checked in</span>
+                <span>{tr("Checked in")}</span>
                 <strong>
-                  {
+                  {tr(
                     confirmed
                       .flatMap((b) => b.tickets)
-                      .filter((t) => t.status === "checked_in").length
-                  }
+                      .filter((t) => t.status === "checked_in").length,
+                  )}
                 </strong>
-                <small>Individual QR tickets</small>
+                <small>{tr("Individual QR tickets")}</small>
               </div>
               <div className="panel">
-                <span>Simulated booking value</span>
+                <span>{tr("Simulated booking value")}</span>
                 <strong className="stat-money">
-                  {money(confirmed.reduce((s, b) => s + b.total, 0))}
+                  {tr(money(confirmed.reduce((s, b) => s + b.total, 0)))}
                 </strong>
-                <small>No money collected</small>
+                <small>{tr("No money collected")}</small>
               </div>
             </div>
             <div className="panel">
               <div className="section-heading">
-                <h2>Next on the road.</h2>
+                <h2>{tr("Next on the road.")}</h2>
                 <button className="text-link" onClick={() => setTab("trips")}>
-                  All departures <ArrowRight size={16} />
+                  {tr(" All departures ")}
+                  <ArrowRight size={16} />
                 </button>
               </div>
               <div className="table-scroll">
                 <table>
                   <thead>
                     <tr>
-                      <th>Route</th>
-                      <th>Departure</th>
-                      <th>Vehicle</th>
-                      <th>Availability</th>
-                      <th>Status</th>
+                      <th>{tr("Route")}</th>
+                      <th>{tr("Departure")}</th>
+                      <th>{tr("Vehicle")}</th>
+                      <th>{tr("Availability")}</th>
+                      <th>{tr("Status")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -370,20 +382,20 @@ export function Staff() {
                         <tr key={t.id}>
                           <td>
                             <strong>
-                              {t.route.origin} → {t.route.destination}
+                              {tr(t.route.origin)} → {tr(t.route.destination)}
                             </strong>
-                            <small>{t.route.via}</small>
+                            <small>{tr(t.route.via)}</small>
                           </td>
                           <td>
-                            {dateLabel(t.departure)}
-                            <small>{time(t.departure)}</small>
+                            {tr(dateLabel(t.departure))}
+                            <small>{tr(time(t.departure))}</small>
                           </td>
-                          <td>{t.bus.registration}</td>
+                          <td>{tr(t.bus.registration)}</td>
                           <td>
-                            {t.available} / {t.bus.capacity}
+                            {tr(t.available)} / {tr(t.bus.capacity)}
                           </td>
                           <td>
-                            <span className="badge">{t.status}</span>
+                            <span className="badge">{tr(t.status)}</span>
                           </td>
                         </tr>
                       ))}
@@ -396,12 +408,12 @@ export function Staff() {
         {tab === "bookings" && (
           <div className="panel">
             <div className="section-heading">
-              <h2>Every passenger, accounted for.</h2>
+              <h2>{tr("Every passenger, accounted for.")}</h2>
               <div className="search-field">
                 <Search size={17} />
                 <input
-                  aria-label="Search bookings"
-                  placeholder="Reference, name or phone"
+                  aria-label={tr("Search bookings")}
+                  placeholder={tr("Reference, name or phone")}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
@@ -411,12 +423,12 @@ export function Staff() {
               <table>
                 <thead>
                   <tr>
-                    <th>Booking</th>
-                    <th>Passenger</th>
-                    <th>Seats</th>
-                    <th>Demo value</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{tr("Booking")}</th>
+                    <th>{tr("Passenger")}</th>
+                    <th>{tr("Seats")}</th>
+                    <th>{tr("Demo value")}</th>
+                    <th>{tr("Status")}</th>
+                    <th>{tr("Actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -425,25 +437,25 @@ export function Staff() {
                       <td>
                         <strong>{b.reference}</strong>
                         <small>
-                          {
+                          {tr(
                             data.trips.find((t) => t.id === b.trip_id)?.route
-                              .origin
-                          }{" "}
-                          →{" "}
-                          {
+                              .origin,
+                          )}
+                          {tr(" ")}→{tr(" ")}
+                          {tr(
                             data.trips.find((t) => t.id === b.trip_id)?.route
-                              .destination
-                          }
+                              .destination,
+                          )}
                         </small>
                       </td>
                       <td>
                         {b.name}
                         <small>{b.phone}</small>
                       </td>
-                      <td>{b.tickets.map((t) => t.seat).join(", ")}</td>
-                      <td>{money(b.total)}</td>
+                      <td>{tr(b.tickets.map((t) => t.seat).join(", "))}</td>
+                      <td>{tr(money(b.total))}</td>
                       <td>
-                        <span className="badge">{b.status}</span>
+                        <span className="badge">{tr(b.status)}</span>
                       </td>
                       <td>
                         <Link
@@ -451,14 +463,14 @@ export function Staff() {
                           href={`/ticket/${b.id}`}
                           target="_blank"
                         >
-                          View tickets
+                          {tr(" View tickets ")}
                         </Link>
                         {admin && b.status === "confirmed" && (
                           <button
                             className="danger-text"
                             onClick={() => setConfirmCancel(b)}
                           >
-                            Cancel
+                            {tr(" Cancel ")}
                           </button>
                         )}
                       </td>
@@ -469,10 +481,11 @@ export function Staff() {
               {!bookings.length && (
                 <div className="empty-state">
                   <Ticket />
-                  <h3>No bookings yet.</h3>
-                  <p>Create a guest booking to see it here.</p>
+                  <h3>{tr("No bookings yet.")}</h3>
+                  <p>{tr("Create a guest booking to see it here.")}</p>
                   <Link href="/search" className="text-link">
-                    Try a booking <ArrowRight size={16} />
+                    {tr(" Try a booking ")}
+                    <ArrowRight size={16} />
                   </Link>
                 </div>
               )}
@@ -483,7 +496,7 @@ export function Staff() {
           <>
             <div className="panel">
               <div className="section-heading">
-                <h2>Departures & manifests</h2>
+                <h2>{tr("Departures & manifests")}</h2>
                 {admin && (
                   <button
                     className="button button-dark"
@@ -498,21 +511,23 @@ export function Staff() {
                     }
                   >
                     <Plus size={16} />
-                    Add departure
+                    {tr(" Add departure ")}
                   </button>
                 )}
               </div>
               <label>
-                Choose a departure
+                {tr(" Choose a departure ")}
                 <select
                   value={selectedTrip}
                   onChange={(e) => setSelectedTrip(e.target.value)}
                 >
                   {data.trips.map((t) => (
                     <option key={t.id} value={t.id}>
-                      {t.route.origin} → {t.route.destination} ·{" "}
-                      {dateLabel(t.departure)} {time(t.departure)} ·{" "}
-                      {t.bus.registration}
+                      {tr(t.route.origin)} → {tr(t.route.destination)} ·
+                      {tr(" ")}
+                      {tr(dateLabel(t.departure))} {tr(time(t.departure))} ·
+                      {tr(" ")}
+                      {tr(t.bus.registration)}
                     </option>
                   ))}
                 </select>
@@ -522,24 +537,25 @@ export function Staff() {
                   <div className="manifest-heading">
                     <div>
                       <h3>
-                        {trip.route.origin} → {trip.route.destination}
+                        {tr(trip.route.origin)} → {tr(trip.route.destination)}
                       </h3>
                       <p>
-                        {dateLabel(trip.departure)} · {time(trip.departure)} ·{" "}
-                        {trip.bus.registration} · {trip.status}
+                        {tr(dateLabel(trip.departure))} ·{" "}
+                        {tr(time(trip.departure))} ·{tr(" ")}
+                        {tr(trip.bus.registration)} · {tr(trip.status)}
                       </p>
                     </div>
                     <div className="button-row">
                       <button className="button button-outline" onClick={csv}>
                         <Download size={16} />
-                        Export manifest
+                        {tr(" Export manifest ")}
                       </button>
                       {admin && (
                         <button
                           className="button button-outline"
                           onClick={() => setEditTrip(trip)}
                         >
-                          Edit departure
+                          {tr(" Edit departure ")}
                         </button>
                       )}
                     </div>
@@ -548,11 +564,11 @@ export function Staff() {
                     <table>
                       <thead>
                         <tr>
-                          <th>Seat</th>
-                          <th>Passenger</th>
-                          <th>Reference</th>
-                          <th>Phone</th>
-                          <th>Boarding status</th>
+                          <th>{tr("Seat")}</th>
+                          <th>{tr("Passenger")}</th>
+                          <th>{tr("Reference")}</th>
+                          <th>{tr("Phone")}</th>
+                          <th>{tr("Boarding status")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -560,14 +576,14 @@ export function Staff() {
                           b.tickets.map((t) => (
                             <tr key={t.id}>
                               <td>
-                                <strong>{t.seat}</strong>
+                                <strong>{tr(t.seat)}</strong>
                               </td>
                               <td>{t.passenger}</td>
                               <td>{b.reference}</td>
                               <td>{b.phone}</td>
                               <td>
                                 <span className="badge">
-                                  {t.status.replace("_", " ")}
+                                  {tr(t.status.replace("_", " "))}
                                 </span>
                               </td>
                             </tr>
@@ -577,7 +593,7 @@ export function Staff() {
                     </table>
                     {!manifest.length && (
                       <p className="muted-text">
-                        No confirmed passengers on this departure.
+                        {tr(" No confirmed passengers on this departure. ")}
                       </p>
                     )}
                   </div>
@@ -587,13 +603,14 @@ export function Staff() {
             {admin && trip && (
               <div className="panel seat-control">
                 <div>
-                  <h2>Keep a seat aside.</h2>
+                  <h2>{tr("Keep a seat aside.")}</h2>
                   <p>
-                    Block unsold seats for operational needs. Held or booked
-                    seats are protected.
+                    {tr(
+                      " Block unsold seats for operational needs. Held or booked seats are protected. ",
+                    )}
                   </p>
                   <label>
-                    Seat number
+                    {tr(" Seat number ")}
                     <input
                       type="number"
                       min="1"
@@ -618,7 +635,7 @@ export function Staff() {
                         )
                       }
                     >
-                      Block seat
+                      {tr(" Block seat ")}
                     </button>
                     <button
                       disabled={busy || !blockSeat}
@@ -635,10 +652,13 @@ export function Staff() {
                         )
                       }
                     >
-                      Unblock
+                      {tr(" Unblock ")}
                     </button>
                   </div>
-                  <p>Blocked: {trip.blocked.join(", ") || "None"}</p>
+                  <p>
+                    {tr("Blocked: ")}
+                    {tr(trip.blocked.join(", ") || "None")}
+                  </p>
                 </div>
                 <SeatMap
                   trip={trip}
@@ -653,34 +673,36 @@ export function Staff() {
         {tab === "fleet" && admin && (
           <>
             <div className="section-heading">
-              <h2>Vehicles & seat templates</h2>
+              <h2>{tr("Vehicles & seat templates")}</h2>
               <button
                 className="button button-dark"
                 onClick={() => setShowBus(true)}
               >
                 <Plus size={16} />
-                Add demo vehicle
+                {tr(" Add demo vehicle ")}
               </button>
             </div>
             <div className="fleet-grid">
               {data.buses?.map((b) => (
                 <div className="panel" key={b.id}>
                   <BusFront size={25} />
-                  <h3>{b.registration}</h3>
-                  <p>{b.name}</p>
-                  <strong>{b.capacity} seats</strong>
-                  <p className="small-note">{b.amenities.join(" · ")}</p>
+                  <h3>{tr(b.registration)}</h3>
+                  <p>{tr(b.name)}</p>
+                  <strong>
+                    {tr(b.capacity)} {tr(" seats")}
+                  </strong>
+                  <p className="small-note">{tr(b.amenities.join(" · "))}</p>
                 </div>
               ))}
             </div>
             <div className="section-heading">
-              <h2>Route variants</h2>
+              <h2>{tr("Route variants")}</h2>
               <button
                 className="button button-outline"
                 onClick={() => setShowRoute(true)}
               >
                 <Plus size={16} />
-                Add route variant
+                {tr(" Add route variant ")}
               </button>
             </div>
             <div className="panel">
@@ -688,22 +710,22 @@ export function Staff() {
                 <table>
                   <thead>
                     <tr>
-                      <th>Route</th>
-                      <th>Via</th>
-                      <th>Stops</th>
-                      <th>Source status</th>
+                      <th>{tr("Route")}</th>
+                      <th>{tr("Via")}</th>
+                      <th>{tr("Stops")}</th>
+                      <th>{tr("Source status")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.routes?.map((r) => (
                       <tr key={r.id}>
                         <td>
-                          {r.origin} → {r.destination}
+                          {tr(r.origin)} → {tr(r.destination)}
                         </td>
-                        <td>{r.via}</td>
-                        <td>{r.stops.length}</td>
+                        <td>{tr(r.via)}</td>
+                        <td>{tr(r.stops.length)}</td>
                         <td>
-                          <small>{r.source}</small>
+                          <small>{tr(r.source)}</small>
                         </td>
                       </tr>
                     ))}
@@ -711,8 +733,9 @@ export function Staff() {
                 </table>
               </div>
               <Notice>
-                Assigned routes and layouts are protected. Create a new variant
-                when the stop order or seat numbering changes.
+                {tr(
+                  " Assigned routes and layouts are protected. Create a new variant when the stop order or seat numbering changes. ",
+                )}
               </Notice>
             </div>
           </>
@@ -733,15 +756,16 @@ export function Staff() {
                 );
               }}
             >
-              <h2>Demo booking policies</h2>
+              <h2>{tr("Demo booking policies")}</h2>
               <p>
-                These editable rules are prototype assumptions, pending Dilanka
-                approval.
+                {tr(
+                  " These editable rules are prototype assumptions, pending Dilanka approval. ",
+                )}
               </p>
               <div className="form-grid">
                 {Object.entries(data.policy).map(([key, value]) => (
                   <label key={key}>
-                    {
+                    {tr(
                       (
                         {
                           cutoffMinutes: "Booking cutoff (minutes)",
@@ -750,8 +774,8 @@ export function Staff() {
                           bagKg: "Bag allowance (kg)",
                           arrivalMinutes: "Arrive before boarding (minutes)",
                         } as Record<string, string>
-                      )[key]
-                    }
+                      )[key],
+                    )}
                     <input
                       key={`${key}-${value}`}
                       type="number"
@@ -773,14 +797,15 @@ export function Staff() {
                 ))}
               </div>
               <button className="button button-dark" disabled={busy}>
-                Save policies
+                {tr(" Save policies ")}
               </button>
             </form>
             <div className="panel">
-              <h2>Demo maintenance</h2>
+              <h2>{tr("Demo maintenance")}</h2>
               <p>
-                Add the next two weeks of sample departures without changing
-                existing bookings.
+                {tr(
+                  " Add the next two weeks of sample departures without changing existing bookings. ",
+                )}
               </p>
               <button
                 className="button button-outline"
@@ -794,16 +819,17 @@ export function Staff() {
                 }
               >
                 <RefreshCw size={16} />
-                Refresh upcoming demo trips
+                {tr(" Refresh upcoming demo trips ")}
               </button>
               <hr />
-              <h3>Reset all demo bookings</h3>
+              <h3>{tr("Reset all demo bookings")}</h3>
               <p>
-                This removes all demo passenger records and tickets and releases
-                their seats. It does not alter routes or vehicle templates.
+                {tr(
+                  " This removes all demo passenger records and tickets and releases their seats. It does not alter routes or vehicle templates. ",
+                )}
               </p>
               <label>
-                Type RESET DEMO BOOKINGS
+                {tr(" Type RESET DEMO BOOKINGS ")}
                 <input
                   value={reset}
                   onChange={(e) => setReset(e.target.value)}
@@ -823,18 +849,19 @@ export function Staff() {
                     setReset("");
                 }}
               >
-                Reset demo bookings
+                {tr(" Reset demo bookings ")}
               </button>
             </div>
             <div className="panel">
-              <h2>Recent activity</h2>
+              <h2>{tr("Recent activity")}</h2>
               {data.audit?.map((a) => (
                 <div className="audit-row" key={a.id}>
                   <span>
-                    {a.action.replaceAll(".", " · ").replaceAll("_", " ")}
+                    {tr(a.action).replaceAll(".", " · ").replaceAll("_", " ")}
                   </span>
                   <small>
-                    {a.actor} · {dateLabel(a.created_at)} {time(a.created_at)}
+                    {tr(a.actor)} · {tr(dateLabel(a.created_at))}{" "}
+                    {tr(time(a.created_at))}
                   </small>
                 </div>
               ))}
@@ -845,15 +872,16 @@ export function Staff() {
       {confirmCancel && (
         <Modal
           error={error}
-          title="Cancel this demo booking?"
+          title={tr("Cancel this demo booking?")}
           close={() => setConfirmCancel(null)}
         >
           <p>
             {confirmCancel.reference} · {confirmCancel.name}
           </p>
           <p>
-            This releases its seats and invalidates all unboarded QR tickets. No
-            refund or message is sent.
+            {tr(
+              " This releases its seats and invalidates all unboarded QR tickets. No refund or message is sent. ",
+            )}
           </p>
           <button
             className="button button-danger"
@@ -869,14 +897,14 @@ export function Staff() {
                 setConfirmCancel(null);
             }}
           >
-            Cancel booking
+            {tr(" Cancel booking ")}
           </button>
         </Modal>
       )}
       {editTrip && (
         <Modal
           error={error}
-          title={editTrip.id ? "Edit departure" : "Create a demo departure"}
+          title={tr(editTrip.id ? "Edit departure" : "Create a demo departure")}
           close={() => setEditTrip(null)}
         >
           <form
@@ -900,28 +928,28 @@ export function Staff() {
             }}
           >
             <label>
-              Route
+              {tr(" Route ")}
               <select name="routeId" defaultValue={editTrip.route_id}>
                 {data.routes?.map((r) => (
                   <option key={r.id} value={r.id}>
-                    {r.origin} → {r.destination} · {r.via}
+                    {tr(r.origin)} → {tr(r.destination)} · {tr(r.via)}
                   </option>
                 ))}
               </select>
             </label>
             <label>
-              Vehicle
+              {tr(" Vehicle ")}
               <select name="busId" defaultValue={editTrip.bus_id}>
                 {data.buses?.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.registration} · {b.capacity} seats
+                    {tr(b.registration)} · {tr(b.capacity)} {tr(" seats ")}
                   </option>
                 ))}
               </select>
             </label>
             <div className="form-grid">
               <label>
-                Departure · Sri Lanka time
+                {tr(" Departure · Sri Lanka time ")}
                 <input
                   required
                   type="datetime-local"
@@ -932,7 +960,7 @@ export function Staff() {
                 />
               </label>
               <label>
-                Arrival · Sri Lanka time
+                {tr(" Arrival · Sri Lanka time ")}
                 <input
                   required
                   type="datetime-local"
@@ -943,7 +971,7 @@ export function Staff() {
                 />
               </label>
               <label>
-                Fare · LKR
+                {tr(" Fare · LKR ")}
                 <input
                   required
                   type="number"
@@ -954,7 +982,7 @@ export function Staff() {
                 />
               </label>
               <label>
-                Service fee · LKR
+                {tr(" Service fee · LKR ")}
                 <input
                   required
                   type="number"
@@ -966,19 +994,20 @@ export function Staff() {
               </label>
             </div>
             <label>
-              Status
+              {tr(" Status ")}
               <select name="status" defaultValue={editTrip.status || "open"}>
-                <option value="open">Open for booking</option>
-                <option value="closed">Closed</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="open">{tr("Open for booking")}</option>
+                <option value="closed">{tr("Closed")}</option>
+                <option value="cancelled">{tr("Cancelled")}</option>
               </select>
             </label>
             <Notice>
-              Departures with confirmed bookings cannot be edited. Cancel
-              bookings first to preserve valid tickets and seat mappings.
+              {tr(
+                " Departures with confirmed bookings cannot be edited. Cancel bookings first to preserve valid tickets and seat mappings. ",
+              )}
             </Notice>
             <button disabled={busy} className="button button-dark">
-              Save departure
+              {tr(" Save departure ")}
             </button>
           </form>
         </Modal>
@@ -986,7 +1015,7 @@ export function Staff() {
       {showBus && (
         <Modal
           error={error}
-          title="Add a demo vehicle"
+          title={tr("Add a demo vehicle")}
           close={() => setShowBus(false)}
         >
           <form
@@ -1016,15 +1045,19 @@ export function Staff() {
             }}
           >
             <label>
-              Coach name
-              <input required name="name" placeholder="Luxury express" />
+              {tr(" Coach name ")}
+              <input required name="name" placeholder={tr("Luxury express")} />
             </label>
             <label>
-              Demo registration
-              <input required name="registration" placeholder="DEMO-NEW" />
+              {tr(" Demo registration ")}
+              <input
+                required
+                name="registration"
+                placeholder={tr("DEMO-NEW")}
+              />
             </label>
             <label>
-              Numbered seat template
+              {tr(" Numbered seat template ")}
               <select name="capacity">
                 <option>49</option>
                 <option>51</option>
@@ -1032,14 +1065,14 @@ export function Staff() {
               </select>
             </label>
             <label>
-              Amenities · comma separated
+              {tr(" Amenities · comma separated ")}
               <input
                 name="amenities"
                 defaultValue="Air conditioning, Reclining seats"
               />
             </label>
             <button disabled={busy} className="button button-dark">
-              Add vehicle
+              {tr(" Add vehicle ")}
             </button>
           </form>
         </Modal>
@@ -1047,7 +1080,7 @@ export function Staff() {
       {showRoute && (
         <Modal
           error={error}
-          title="Add a route variant"
+          title={tr("Add a route variant")}
           close={() => setShowRoute(false)}
         >
           <form
@@ -1091,23 +1124,23 @@ export function Staff() {
             }}
           >
             <label>
-              Route name
+              {tr(" Route name ")}
               <input
                 required
                 name="name"
-                placeholder="The coastal connection"
+                placeholder={tr("The coastal connection")}
               />
             </label>
             <label>
-              Ordered stops · comma separated
+              {tr(" Ordered stops · comma separated ")}
               <textarea
                 required
                 name="stops"
-                placeholder="Ampara, Monaragala, Matara"
+                placeholder={tr("Ampara, Monaragala, Matara")}
               />
             </label>
             <label>
-              Total duration · minutes
+              {tr(" Total duration · minutes ")}
               <input
                 required
                 type="number"
@@ -1117,7 +1150,7 @@ export function Staff() {
               />
             </label>
             <label>
-              Sample flat fare · LKR
+              {tr(" Sample flat fare · LKR ")}
               <input
                 required
                 type="number"
@@ -1127,11 +1160,12 @@ export function Staff() {
               />
             </label>
             <Notice>
-              Stop times are evenly spaced sample offsets. Create a dated
-              departure after adding the route.
+              {tr(
+                " Stop times are evenly spaced sample offsets. Create a dated departure after adding the route. ",
+              )}
             </Notice>
             <button disabled={busy} className="button button-dark">
-              Add route
+              {tr(" Add route ")}
             </button>
           </form>
         </Modal>
@@ -1155,6 +1189,7 @@ function Modal({
   children: React.ReactNode;
   error?: string;
 }) {
+  const tr = useTranslation();
   const dialog = useRef<HTMLElement>(null);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
@@ -1193,21 +1228,21 @@ function Modal({
         className="modal panel"
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-label={tr(title)}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="section-heading">
-          <h2>{title}</h2>
+          <h2>{tr(title)}</h2>
           <button
-            aria-label="Close dialog"
+            aria-label={tr("Close dialog")}
             className="icon-button"
             onClick={close}
           >
             <X />
           </button>
         </div>
-        {error && <Notice type="error">{error}</Notice>}
-        {children}
+        {error && <Notice type="error">{tr(error)}</Notice>}
+        {tr(children)}
       </section>
     </div>
   );
@@ -1219,6 +1254,7 @@ function Scanner({
   trips: Trip[];
   onChange: () => Promise<void>;
 }) {
+  const tr = useTranslation();
   const [tripId, setTripId] = useState(
       trips.find((t) => new Date(t.departure) > new Date())?.id || "",
     ),
@@ -1344,10 +1380,10 @@ function Scanner({
   return (
     <div className="scanner-layout">
       <div className="panel">
-        <span className="eyebrow">A WARM WELCOME STARTS HERE</span>
-        <h2>Check in a passenger.</h2>
+        <span className="eyebrow">{tr("A WARM WELCOME STARTS HERE")}</span>
+        <h2>{tr("Check in a passenger.")}</h2>
         <label>
-          Departure
+          {tr(" Departure ")}
           <select
             value={tripId}
             onChange={(e) => {
@@ -1358,9 +1394,9 @@ function Scanner({
           >
             {trips.map((t) => (
               <option key={t.id} value={t.id}>
-                {t.route.origin} → {t.route.destination} ·{" "}
-                {dateLabel(t.departure)} {time(t.departure)} ·{" "}
-                {t.bus.registration}
+                {tr(t.route.origin)} → {tr(t.route.destination)} ·{tr(" ")}
+                {tr(dateLabel(t.departure))} {tr(time(t.departure))} ·{tr(" ")}
+                {tr(t.bus.registration)}
               </option>
             ))}
           </select>
@@ -1371,8 +1407,10 @@ function Scanner({
           ) : (
             <>
               <ScanLine size={66} />
-              <p>Scan a demo ticket’s QR code.</p>
-              <small>Camera scanning requires HTTPS or localhost.</small>
+              <p>{tr("Scan a demo ticket’s QR code.")}</p>
+              <small>
+                {tr("Camera scanning requires HTTPS or localhost.")}
+              </small>
             </>
           )}
         </div>
@@ -1382,11 +1420,11 @@ function Scanner({
             onClick={camera ? stop : start}
           >
             <Camera size={17} />
-            {camera ? "Stop camera" : "Start camera"}
+            {tr(camera ? "Stop camera" : "Start camera")}
           </button>
           <label className="button button-outline upload-label">
             <Upload size={17} />
-            Upload QR
+            {tr(" Upload QR ")}
             <input
               type="file"
               accept="image/*"
@@ -1404,28 +1442,30 @@ function Scanner({
           }}
         >
           <label>
-            Ticket link, token or booking reference
+            {tr(" Ticket link, token or booking reference ")}
             <input
               required
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder="Paste a QR link or DE-XXXXXXXXXX"
+              placeholder={tr("Paste a QR link or DE-XXXXXXXXXX")}
             />
           </label>
           <button className="button button-outline full-width" disabled={busy}>
-            Verify ticket <ArrowRight size={17} />
+            {tr(" Verify ticket ")}
+            <ArrowRight size={17} />
           </button>
         </form>
       </div>
       <div>
         <div className="panel">
-          <h2>Ticket result</h2>
-          {error && <Notice type="error">{error}</Notice>}
-          {success && <Notice type="success">{success}</Notice>}
+          <h2>{tr("Ticket result")}</h2>
+          {error && <Notice type="error">{tr(error)}</Notice>}
+          {success && <Notice type="success">{tr(success)}</Notice>}
           {!result && !found.length && !error && !success && (
             <p>
-              Scan or enter a ticket to see its status. Viewing a ticket never
-              checks it in automatically.
+              {tr(
+                " Scan or enter a ticket to see its status. Viewing a ticket never checks it in automatically. ",
+              )}
             </p>
           )}
           {found.map((t) => (
@@ -1438,8 +1478,9 @@ function Scanner({
               }}
             >
               <span>
-                Seat {t.seat} · {t.passenger}
-                <small>{t.status.replace("_", " ")}</small>
+                {tr(" Seat ")}
+                {tr(t.seat)} · {t.passenger}
+                <small>{tr(t.status.replace("_", " "))}</small>
               </span>
               <ArrowRight size={18} />
             </button>
@@ -1451,17 +1492,22 @@ function Scanner({
               >
                 {result.valid ? <CheckCircle2 /> : <X />}
               </span>
-              <h3>Seat {result.seat}</h3>
+              <h3>
+                {tr("Seat ")}
+                {tr(result.seat)}
+              </h3>
               <p>
-                {result.route.origin} → {result.route.destination}
+                {tr(result.route.origin)} → {tr(result.route.destination)}
               </p>
               <p>
-                {dateLabel(result.departure)} · {time(result.departure)}
+                {tr(dateLabel(result.departure))} · {tr(time(result.departure))}
               </p>
-              <span className="badge">{result.status.replace("_", " ")}</span>
+              <span className="badge">
+                {tr(result.status.replace("_", " "))}
+              </span>
               {result.trip_id !== tripId && (
                 <Notice type="error">
-                  This ticket belongs to a different departure.
+                  {tr(" This ticket belongs to a different departure. ")}
                 </Notice>
               )}
               <button
@@ -1485,14 +1531,16 @@ function Scanner({
                   }
                 }}
               >
-                Confirm check-in <CheckCircle2 size={17} />
+                {tr(" Confirm check-in ")}
+                <CheckCircle2 size={17} />
               </button>
             </>
           )}
         </div>
         <Notice>
-          Demo validation only. Check-in opens 24 hours before departure and
-          detects repeat use. No offline check-in is supported.
+          {tr(
+            " Demo validation only. Check-in opens 24 hours before departure and detects repeat use. No offline check-in is supported. ",
+          )}
         </Notice>
       </div>
     </div>

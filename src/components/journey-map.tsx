@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import { useEffect, useRef, useState } from "react";
 import {
   MapPin,
@@ -23,6 +24,7 @@ export function JourneyMap({
   pickup?: string;
   dropoff?: string;
 }) {
+  const tr = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <details
@@ -31,9 +33,9 @@ export function JourneyMap({
     >
       <summary>
         <span>
-          <RouteIcon size={17} /> Explore route & stops
+          <RouteIcon size={17} /> {tr(" Explore route & stops ")}
         </span>
-        <span className="map-summary-via">{route.via}</span>
+        <span className="map-summary-via">{tr(route.via)}</span>
         <ChevronDown size={17} />
       </summary>
       {open && (
@@ -58,6 +60,7 @@ function MapContent({
   pickup?: string;
   dropoff?: string;
 }) {
+  const tr = useTranslation();
   const host = useRef<HTMLDivElement>(null),
     map = useRef<LeafletMap | null>(null);
   const markers = useRef<CircleMarker[]>([]);
@@ -71,16 +74,20 @@ function MapContent({
         if (disposed || !host.current) return;
         const m = L.map(host.current, {
           scrollWheelZoom: false,
-          zoomControl: true,
+          zoomControl: false,
         });
         map.current = m;
+        L.control
+          .zoom({ zoomInTitle: tr("Zoom in"), zoomOutTitle: tr("Zoom out") })
+          .addTo(m);
         const layer = L.tileLayer(
           "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           {
             maxZoom: 18,
             referrerPolicy: "strict-origin-when-cross-origin",
             attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors',
+              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> ' +
+              tr("contributors"),
           },
         ).addTo(m);
         layer.on("tileerror", () => {
@@ -115,7 +122,7 @@ function MapContent({
             }).addTo(m);
             // Text nodes prevent route names from becoming untrusted popup HTML.
             const label = document.createElement("span");
-            label.textContent = s.name;
+            label.textContent = tr(s.name);
             marker
               .bindTooltip(label, { direction: "top" })
               .on("click", () => setSelected(s.name));
@@ -139,7 +146,7 @@ function MapContent({
     };
     // This panel remounts for each route and opening.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route.id, pickup, dropoff]);
+  }, [route.id, pickup, dropoff, tr]);
   const start = route.stops.findIndex(
     (s) => s.name === (pickup || route.origin),
   );
@@ -159,7 +166,9 @@ function MapContent({
           ref={host}
           className="leaflet-host"
           role="region"
-          aria-label={`${route.origin} to ${route.destination} approximate route map`}
+          aria-label={tr(
+            `${route.origin} to ${route.destination} approximate route map`,
+          )}
         />
         <button
           className="map-fit"
@@ -169,29 +178,31 @@ function MapContent({
               map.current?.fitBounds(geometry.points, { padding: [35, 35] });
           }}
         >
-          <Maximize2 size={15} /> Show full route
+          <Maximize2 size={15} /> {tr(" Show full route ")}
         </button>
         <div className="map-legend">
           <span>
-            <i /> Corridor
+            <i /> {tr(" Corridor ")}
           </span>
           {!!geometry.highway.length && (
             <span>
-              <i className="highway" /> E01 highway
+              <i className="highway" /> {tr(" E01 highway ")}
             </span>
           )}
         </div>
       </div>
       <div className="map-stop-panel">
         <div className="map-stop-heading">
-          <span className="eyebrow">YOUR ROAD AHEAD</span>
+          <span className="eyebrow">{tr("YOUR ROAD AHEAD")}</span>
           <h3>
-            {route.origin} → {route.destination}
+            {tr(route.origin)} → {tr(route.destination)}
           </h3>
           <p>
-            {geometry.highway.length
-              ? "Via Southern Expressway · E01"
-              : "Main-road corridor"}
+            {tr(
+              geometry.highway.length
+                ? "Via Southern Expressway · E01"
+                : "Main-road corridor",
+            )}
           </p>
         </div>
         <ol className="map-stop-list">
@@ -207,41 +218,46 @@ function MapContent({
               >
                 <span className="stop-dot" />
                 <span>
-                  <strong>{s.name}</strong>
+                  <strong>{tr(s.name)}</strong>
                   <small>
-                    {s.name === pickup
-                      ? "Your boarding stop"
-                      : s.name === dropoff
-                        ? "Your drop-off stop"
-                        : i === 0
-                          ? "Journey starts"
-                          : i === geometry.stops.length - 1
-                            ? "Journey ends"
-                            : "Intermediate stop"}
+                    {tr(
+                      s.name === pickup
+                        ? "Your boarding stop"
+                        : s.name === dropoff
+                          ? "Your drop-off stop"
+                          : i === 0
+                            ? "Journey starts"
+                            : i === geometry.stops.length - 1
+                              ? "Journey ends"
+                              : "Intermediate stop",
+                    )}
                   </small>
                 </span>
                 <time>
-                  {departure
-                    ? time(
-                        new Date(
-                          new Date(departure).getTime() + s.offset * 60000,
-                        ).toISOString(),
-                      )
-                    : `${Math.floor(s.offset / 60)}h ${s.offset % 60}m`}
+                  {tr(
+                    departure
+                      ? time(
+                          new Date(
+                            new Date(departure).getTime() + s.offset * 60000,
+                          ).toISOString(),
+                        )
+                      : `${Math.floor(s.offset / 60)}h ${s.offset % 60}m`,
+                  )}
                 </time>
               </button>
               {s.name === selected && (
                 <div className="selected-stop">
                   <p>
                     <MapPin size={13} />
-                    {s.location}
+                    {tr(s.location)}
                   </p>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name + " bus stand Sri Lanka")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Find this town on Maps <ExternalLink size={12} />
+                    {tr(" Find this town on Maps ")}
+                    <ExternalLink size={12} />
                   </a>
                 </div>
               )}
@@ -250,10 +266,10 @@ function MapContent({
         </ol>
       </div>
       <p className="map-disclaimer">
-        {error && <span role="status">{error} </span>}Illustrative corridor,
-        town-centre markers and sample times. Lines are not turn-by-turn
-        directions. Exact boarding points and highway entry/exit require
-        operator confirmation. Highway interchanges are not boarding stops.
+        {error && <span role="status">{tr(error)} </span>}
+        {tr(
+          "Illustrative corridor, town-centre markers and sample times. Lines are not turn-by-turn directions. Exact boarding points and highway entry/exit require operator confirmation. Highway interchanges are not boarding stops. ",
+        )}
       </p>
     </div>
   );

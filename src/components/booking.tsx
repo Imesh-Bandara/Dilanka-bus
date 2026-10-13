@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -41,32 +42,33 @@ export function SeatMap({
   onSelect: (seat: number) => void;
   disabled?: boolean;
 }) {
+  const tr = useTranslation();
   return (
     <div className="seat-plan">
       <div className="seat-legend">
         <span>
           <i className="available" />
-          Available
+          {tr(" Available ")}
         </span>
         <span>
           <i className="selected" />
-          Selected
+          {tr(" Selected ")}
         </span>
         <span>
           <i className="booked" />
-          Unavailable
+          {tr(" Unavailable ")}
         </span>
         <span>
           <i className="held" />
-          Held
+          {tr(" Held ")}
         </span>
       </div>
       <div className="bus-outline">
         <div className="bus-front">
           <span>
-            <SteeringWheel size={25} /> Driver
+            <SteeringWheel size={25} /> {tr(" Driver ")}
           </span>
-          <small>FRONT OF BUS</small>
+          <small>{tr("FRONT OF BUS")}</small>
         </div>
         <div className="bus-rows">
           {trip.bus.layout.map((row, i) => (
@@ -89,13 +91,15 @@ export function SeatMap({
                     }
                     key={j}
                     disabled={disabled || unavailable || held}
-                    aria-label={`Seat ${seat}, ${chosen ? "selected" : unavailable ? "unavailable" : held ? "temporarily held" : "available"}`}
+                    aria-label={tr(
+                      `Seat ${seat}, ${chosen ? "selected" : unavailable ? "unavailable" : held ? "temporarily held" : "available"}`,
+                    )}
                     aria-pressed={chosen}
                     onClick={() => onSelect(seat)}
                     className={`seat ${chosen ? "selected" : unavailable ? "booked" : held ? "held" : "available"}`}
                   >
                     <Armchair size={21} />
-                    <span>{String(seat).padStart(2, "0")}</span>
+                    <span>{tr(String(seat).padStart(2, "0"))}</span>
                   </button>
                 ) : (
                   <span key={j} style={{ gridColumn: j < 2 ? j + 1 : j + 2 }} />
@@ -104,17 +108,19 @@ export function SeatMap({
             </div>
           ))}
         </div>
-        <div className="bus-rear">REAR</div>
+        <div className="bus-rear">{tr("REAR")}</div>
       </div>
       <p className="seat-note">
-        {trip.bus.capacity} seats · {trip.bus.registration}
+        {tr(trip.bus.capacity)} {tr(" seats · ")}
+        {tr(trip.bus.registration)}
         <br />
-        The diagram shows the numbering of this demo coach.
+        {tr(" The diagram shows the numbering of this demo coach. ")}
       </p>
     </div>
   );
 }
 export function BookPage({ id }: { id: string }) {
+  const tr = useTranslation();
   const sp = useSearchParams(),
     { t } = useLocale();
   const [trip, setTrip] = useState<Trip | null>(null),
@@ -244,9 +250,10 @@ export function BookPage({ id }: { id: string }) {
   if (!trip)
     return error ? (
       <div className="container section">
-        <Notice type="error">{error}</Notice>
+        <Notice type="error">{tr(error)}</Notice>
         <Link href="/search" className="text-link">
-          Choose another departure <ArrowRight size={16} />
+          {tr(" Choose another departure ")}
+          <ArrowRight size={16} />
         </Link>
       </div>
     ) : (
@@ -272,20 +279,21 @@ export function BookPage({ id }: { id: string }) {
           href={`/search?from=${trip.route.origin}&to=${trip.route.destination}&date=${sriDate(new Date(trip.departure))}`}
           className="back-link"
         >
-          <ArrowLeft size={16} /> Back to departures
+          <ArrowLeft size={16} /> {tr(" Back to departures ")}
         </Link>
-        <span className="badge">GUEST BOOKING</span>
+        <span className="badge">{tr("GUEST BOOKING")}</span>
       </div>
       <div className="container booking-heading">
-        <span className="eyebrow">YOUR JOURNEY. YOUR SEAT.</span>
+        <span className="eyebrow">{tr("YOUR JOURNEY. YOUR SEAT.")}</span>
         <h1>
-          {trip.route.origin}
+          {tr(trip.route.origin)}
           <span className="heading-arrow">→</span>
-          {trip.route.destination}
+          {tr(trip.route.destination)}
         </h1>
         <p>
-          {dateLabel(trip.departure)} · {time(trip.departure)} ·{" "}
-          {trip.bus.registration}
+          {tr(dateLabel(trip.departure))} · {tr(time(trip.departure))} ·
+          {tr(" ")}
+          {tr(trip.bus.registration)}
         </p>
       </div>
       <div className="container booking-progress">
@@ -298,7 +306,7 @@ export function BookPage({ id }: { id: string }) {
             aria-current={step === i + 1 ? "step" : undefined}
           >
             <span>{step > i + 1 ? <Check size={15} /> : i + 1}</span>
-            {label}
+            {tr(label)}
           </div>
         ))}
       </div>
@@ -312,19 +320,22 @@ export function BookPage({ id }: { id: string }) {
       </div>
       <div className="container booking-layout">
         <div>
-          {error && <Notice type="error">{error}</Notice>}
+          {error && <Notice type="error">{tr(error)}</Notice>}
           {closed && (
             <Notice type="error">
-              Booking is closed for this departure.{" "}
-              <Link href="/search">Find another journey.</Link>
+              {tr(" Booking is closed for this departure.")}
+              {tr(" ")}
+              <Link href="/search">{tr("Find another journey.")}</Link>
             </Notice>
           )}
           {hold && step > 1 && (
             <Notice type={expired ? "error" : "info"}>
               <Clock size={17} />
-              {expired
-                ? "Your seat hold expired. Choose seats again to continue."
-                : `Seats held for ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`}
+              {tr(
+                expired
+                  ? "Your seat hold expired. Choose seats again to continue."
+                  : `Seats held for ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`,
+              )}
               {expired && (
                 <button
                   className="text-link"
@@ -334,7 +345,8 @@ export function BookPage({ id }: { id: string }) {
                     setSelected([]);
                   }}
                 >
-                  Reselect seats <RefreshCw size={15} />
+                  {tr(" Reselect seats ")}
+                  <RefreshCw size={15} />
                 </button>
               )}
             </Notice>
@@ -344,27 +356,29 @@ export function BookPage({ id }: { id: string }) {
               <div className="panel-heading">
                 <span className="step-tag">01</span>
                 <div>
-                  <h2>{t.seats}</h2>
-                  <p>Find your favourite spot for the road ahead.</p>
+                  <h2>{tr(t.seats)}</h2>
+                  <p>{tr("Find your favourite spot for the road ahead.")}</p>
                 </div>
               </div>
               <div className="stop-selectors">
                 <label>
-                  Boarding point
+                  {tr(" Boarding point ")}
                   <select
-                    aria-label="Boarding point"
+                    aria-label={tr("Boarding point")}
                     value={pickup}
                     onChange={(e) => setPickup(e.target.value)}
                   >
                     {trip.route.stops.slice(0, -1).map((s) => (
-                      <option key={s.name}>{s.name}</option>
+                      <option key={s.name} value={s.name}>
+                        {tr(s.name)}
+                      </option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Drop-off point
+                  {tr(" Drop-off point ")}
                   <select
-                    aria-label="Drop-off point"
+                    aria-label={tr("Drop-off point")}
                     value={dropoff}
                     onChange={(e) => setDropoff(e.target.value)}
                   >
@@ -375,17 +389,20 @@ export function BookPage({ id }: { id: string }) {
                           trip.route.stops.findIndex((p) => p.name === pickup),
                       )
                       .map((s) => (
-                        <option key={s.name}>{s.name}</option>
+                        <option key={s.name} value={s.name}>
+                          {tr(s.name)}
+                        </option>
                       ))}
                   </select>
                 </label>
               </div>
               <p className="small-note">
                 <MapPin size={14} />
-                {boarding?.location} · {time(boardingTime)}
+                {tr(boarding?.location)} · {tr(time(boardingTime))}
                 <br />
-                Flat demo fare applies to all listed stop pairs. Intermediate
-                times are illustrative.
+                {tr(
+                  " Flat demo fare applies to all listed stop pairs. Intermediate times are illustrative. ",
+                )}
               </p>
               <SeatMap
                 trip={trip}
@@ -405,9 +422,11 @@ export function BookPage({ id }: { id: string }) {
                 disabled={!selected.length || busy || closed}
                 onClick={acquire}
               >
-                {busy
-                  ? "Holding your seats…"
-                  : `Continue with ${selected.length || "your"} seat${selected.length === 1 ? "" : "s"}`}
+                {tr(
+                  busy
+                    ? "Holding your seats…"
+                    : `Continue with ${selected.length || "your"} seat${selected.length === 1 ? "" : "s"}`,
+                )}
                 <ArrowRight size={17} />
               </button>
             </div>
@@ -425,12 +444,16 @@ export function BookPage({ id }: { id: string }) {
                 <span className="step-tag">02</span>
                 <div>
                   <h2>{t.passenger}</h2>
-                  <p>No account needed. Just the details for your journey.</p>
+                  <p>
+                    {tr(
+                      "No account needed. Just the details for your journey.",
+                    )}
+                  </p>
                 </div>
               </div>
               <div className="form-grid">
                 <label>
-                  Lead passenger name
+                  {tr(" Lead passenger name ")}
                   <input
                     required
                     minLength={2}
@@ -438,11 +461,11 @@ export function BookPage({ id }: { id: string }) {
                     autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Full name"
+                    placeholder={tr("Full name")}
                   />
                 </label>
                 <label>
-                  Phone number
+                  {tr(" Phone number ")}
                   <input
                     required
                     type="tel"
@@ -450,37 +473,40 @@ export function BookPage({ id }: { id: string }) {
                     autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="077 123 4567"
+                    placeholder={tr("077 123 4567")}
                   />
                 </label>
                 <label className="wide">
-                  Email <span className="optional">optional</span>
+                  {tr(" Email ")}
+                  <span className="optional">{tr("optional")}</span>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     autoComplete="email"
-                    placeholder="you@example.com"
+                    placeholder={tr("you@example.com")}
                   />
                   <small>
-                    Your ticket is available here immediately. Email delivery is
-                    not enabled.
+                    {tr(
+                      " Your ticket is available here immediately. Email delivery is not enabled. ",
+                    )}
                   </small>
                 </label>
               </div>
-              <h3 className="subheading">Who’s travelling?</h3>
+              <h3 className="subheading">{tr("Who’s travelling?")}</h3>
               {selected.map((seat, i) => (
                 <label className="passenger-row" key={seat}>
                   <span>
                     <Armchair size={19} />
-                    Seat {seat}
+                    {tr(" Seat ")}
+                    {tr(seat)}
                   </span>
                   <input
-                    aria-label={`Passenger for seat ${seat}`}
+                    aria-label={tr(`Passenger for seat ${seat}`)}
                     required
                     minLength={2}
                     maxLength={100}
-                    placeholder={`Passenger ${i + 1} name`}
+                    placeholder={tr(`Passenger ${i + 1} name`)}
                     value={names[seat] ?? name}
                     onChange={(e) =>
                       setNames({ ...names, [seat]: e.target.value })
@@ -489,8 +515,10 @@ export function BookPage({ id }: { id: string }) {
                 </label>
               ))}
               <p className="privacy-note">
-                <ShieldCheck size={16} /> Contact details are visible only
-                through your private booking link and authorised staff.
+                <ShieldCheck size={16} />{" "}
+                {tr(
+                  " Contact details are visible only through your private booking link and authorised staff. ",
+                )}
               </p>
               <div className="button-row">
                 <button
@@ -508,10 +536,10 @@ export function BookPage({ id }: { id: string }) {
                   }}
                 >
                   <ArrowLeft size={16} />
-                  Back
+                  {tr(" Back ")}
                 </button>
                 <button className="button button-dark" disabled={expired}>
-                  {t.review}
+                  {tr(t.review)}
                   <ArrowRight size={17} />
                 </button>
               </div>
@@ -522,41 +550,44 @@ export function BookPage({ id }: { id: string }) {
               <div className="panel-heading">
                 <span className="step-tag">03</span>
                 <div>
-                  <h2>One last look.</h2>
-                  <p>Make sure everything feels right before you confirm.</p>
+                  <h2>{tr("One last look.")}</h2>
+                  <p>
+                    {tr("Make sure everything feels right before you confirm.")}
+                  </p>
                 </div>
               </div>
               <dl className="review-list">
                 <div>
-                  <dt>Journey</dt>
+                  <dt>{tr("Journey")}</dt>
                   <dd>
-                    {pickup} → {dropoff}
+                    {tr(pickup)} → {tr(dropoff)}
                   </dd>
                 </div>
                 <div>
-                  <dt>Travel date</dt>
-                  <dd>{dateLabel(boardingTime)}</dd>
+                  <dt>{tr("Travel date")}</dt>
+                  <dd>{tr(dateLabel(boardingTime))}</dd>
                 </div>
                 <div>
-                  <dt>Boarding time</dt>
-                  <dd>{time(boardingTime)}</dd>
+                  <dt>{tr("Boarding time")}</dt>
+                  <dd>{tr(time(boardingTime))}</dd>
                 </div>
                 <div>
-                  <dt>Boarding point</dt>
-                  <dd>{boarding?.location}</dd>
+                  <dt>{tr("Boarding point")}</dt>
+                  <dd>{tr(boarding?.location)}</dd>
                 </div>
                 <div>
-                  <dt>Lead passenger</dt>
+                  <dt>{tr("Lead passenger")}</dt>
                   <dd>
                     {name} · {phone}
                   </dd>
                 </div>
                 <div>
-                  <dt>Passengers</dt>
+                  <dt>{tr("Passengers")}</dt>
                   <dd>
                     {selected.map((s) => (
                       <span className="review-passenger" key={s}>
-                        Seat {s} — {names[s] || name}
+                        {tr(" Seat ")}
+                        {s} — {names[s] || name}
                       </span>
                     ))}
                   </dd>
@@ -565,16 +596,18 @@ export function BookPage({ id }: { id: string }) {
               <Notice>
                 <ShieldCheck size={18} />
                 <div>
-                  <strong>This is a demonstration booking.</strong>
+                  <strong>{tr("This is a demonstration booking.")}</strong>
                   <br />
-                  No payment will be collected. Your QR tickets work for demo
-                  validation and are not valid for travel.
+                  {tr(
+                    " No payment will be collected. Your QR tickets work for demo validation and are not valid for travel. ",
+                  )}
                 </div>
               </Notice>
               <p className="small-note">
-                By confirming, you acknowledge the{" "}
+                {tr(" By confirming, you acknowledge the")}
+                {tr(" ")}
                 <Link href="/help" target="_blank">
-                  demo booking and privacy information
+                  {tr(" demo booking and privacy information ")}
                 </Link>
                 .
               </p>
@@ -584,14 +617,14 @@ export function BookPage({ id }: { id: string }) {
                   onClick={() => setStep(2)}
                 >
                   <ArrowLeft size={16} />
-                  Edit details
+                  {tr(" Edit details ")}
                 </button>
                 <button
                   className="button button-gold"
                   onClick={submit}
                   disabled={busy || expired || closed}
                 >
-                  {busy ? "Creating your tickets…" : t.confirm}
+                  {tr(busy ? "Creating your tickets…" : t.confirm)}
                   <ArrowRight size={17} />
                 </button>
               </div>
@@ -603,63 +636,76 @@ export function BookPage({ id }: { id: string }) {
             <img
               className="summary-coach-photo"
               src="/images/dilanka-fleet-original.webp"
-              alt="Dilanka fleet reference photograph"
+              alt={tr("Dilanka fleet reference photograph")}
             />
-            <span className="eyebrow">YOUR JOURNEY AT A GLANCE</span>
+            <span className="eyebrow">{tr("YOUR JOURNEY AT A GLANCE")}</span>
             <h3>
-              {trip.route.origin} → {trip.route.destination}
+              {tr(trip.route.origin)} → {tr(trip.route.destination)}
             </h3>
             <p className="summary-date">
               <CalendarIcon />
-              {dateLabel(trip.departure)}
+              {tr(dateLabel(trip.departure))}
             </p>
             <div className="summary-timeline">
               <div>
                 <i />
                 <span>
-                  <strong>{time(boardingTime)}</strong>
-                  {pickup}
+                  <strong>{tr(time(boardingTime))}</strong>
+                  {tr(pickup)}
                 </span>
               </div>
               <div>
                 <i />
                 <span>
-                  <strong>{time(dropTime)}</strong>
-                  {dropoff}
-                  <small>{dateLabel(dropTime)} · sample stop time</small>
+                  <strong>{tr(time(dropTime))}</strong>
+                  {tr(dropoff)}
+                  <small>
+                    {tr(dateLabel(dropTime))} {tr(" · sample stop time")}
+                  </small>
                 </span>
               </div>
             </div>
             <div className="summary-seats">
-              <span>Your seats</span>
+              <span>{tr("Your seats")}</span>
               <strong>
-                {selected.length
-                  ? selected.map((s) => String(s).padStart(2, "0")).join(", ")
-                  : "Choose your seats"}
+                {tr(
+                  selected.length
+                    ? selected.map((s) => String(s).padStart(2, "0")).join(", ")
+                    : "Choose your seats",
+                )}
               </strong>
             </div>
             <div className="price-lines">
               <p>
-                <span>Fare × {selected.length}</span>
-                <strong>{money(trip.fare * selected.length)}</strong>
+                <span>
+                  {tr("Fare × ")}
+                  {tr(selected.length)}
+                </span>
+                <strong>{tr(money(trip.fare * selected.length))}</strong>
               </p>
               <p>
-                <span>Service fee × {selected.length}</span>
-                <strong>{money(trip.fee * selected.length)}</strong>
+                <span>
+                  {tr("Service fee × ")}
+                  {tr(selected.length)}
+                </span>
+                <strong>{tr(money(trip.fee * selected.length))}</strong>
               </p>
               <div>
-                <span>Total</span>
+                <span>{tr("Total")}</span>
                 <strong>
-                  {money((trip.fare + trip.fee) * selected.length)}
+                  {tr(money((trip.fare + trip.fee) * selected.length))}
                 </strong>
               </div>
             </div>
-            <p className="summary-demo">DEMO FARE · NO PAYMENT COLLECTED</p>
+            <p className="summary-demo">
+              {tr("DEMO FARE · NO PAYMENT COLLECTED")}
+            </p>
           </div>
           <div className="summary-help">
             <PhoneIcon />
             <div>
-              Need a little help?<a href="tel:+94777914680">0777 914680</a>
+              {tr(" Need a little help?")}
+              <a href="tel:+94777914680">0777 914680</a>
             </div>
           </div>
         </aside>
@@ -668,15 +714,19 @@ export function BookPage({ id }: { id: string }) {
       {step === 1 && selected.length > 0 && (
         <div className="mobile-booking-bar">
           <div>
-            <small>{selected.length} seats · demo total</small>
-            <strong>{money((trip.fare + trip.fee) * selected.length)}</strong>
+            <small>
+              {tr(selected.length)} {tr(" seats · demo total")}
+            </small>
+            <strong>
+              {tr(money((trip.fare + trip.fee) * selected.length))}
+            </strong>
           </div>
           <button
             className="button button-dark"
             disabled={busy || closed}
             onClick={acquire}
           >
-            {busy ? "Holding…" : t.continue}
+            {tr(busy ? "Holding…" : t.continue)}
             <ArrowRight size={16} />
           </button>
         </div>
@@ -691,6 +741,8 @@ function PhoneIcon() {
   return <User size={20} />;
 }
 export function TicketPage({ id }: { id: string }) {
+  const tr = useTranslation();
+  const { lang } = useLocale();
   const [booking, setBooking] = useState<
       (Booking & { qrImages: string[] }) | null
     >(null),
@@ -714,7 +766,7 @@ export function TicketPage({ id }: { id: string }) {
     setBusy("download");
     setError("");
     try {
-      const r = await fetch(`/api/bookings/${id}/pdf`, {
+      const r = await fetch(`/api/bookings/${id}/pdf?lang=${lang}`, {
         headers: { "x-booking-access": access },
       });
       if (!r.ok)
@@ -766,9 +818,9 @@ export function TicketPage({ id }: { id: string }) {
   if (!booking)
     return error ? (
       <div className="container section">
-        <Notice type="error">{error}</Notice>
+        <Notice type="error">{tr(error)}</Notice>
         <Link href="/find-ticket" className="button button-dark">
-          Find my ticket
+          {tr(" Find my ticket ")}
         </Link>
       </div>
     ) : (
@@ -787,17 +839,23 @@ export function TicketPage({ id }: { id: string }) {
           )}
         </span>
         <span className="eyebrow">
-          {booking.status === "cancelled"
-            ? "BOOKING CANCELLED"
-            : "YOU’RE ALL SET FOR THE DEMO"}
+          {tr(
+            booking.status === "cancelled"
+              ? "BOOKING CANCELLED"
+              : "YOU’RE ALL SET FOR THE DEMO",
+          )}
         </span>
         <h1>
-          {booking.status === "cancelled"
-            ? "This journey is cancelled."
-            : "A good journey awaits."}
+          {tr(
+            booking.status === "cancelled"
+              ? "This journey is cancelled."
+              : "A good journey awaits.",
+          )}
         </h1>
         <p>
-          Your tickets are saved. Keep your private link or download a copy.
+          {tr(
+            " Your tickets are saved. Keep your private link or download a copy. ",
+          )}
         </p>
         <div className="ticket-actions">
           <button
@@ -806,14 +864,14 @@ export function TicketPage({ id }: { id: string }) {
             onClick={download}
           >
             <Download size={17} />
-            {busy === "download" ? "Preparing…" : "Download tickets"}
+            {tr(busy === "download" ? "Preparing…" : "Download tickets")}
           </button>
           <button
             className="button button-outline"
             onClick={() => window.print()}
           >
             <Printer size={17} />
-            Print
+            {tr(" Print ")}
           </button>
           <button
             className="button button-outline"
@@ -829,89 +887,90 @@ export function TicketPage({ id }: { id: string }) {
             }}
           >
             <Copy size={17} />
-            {copied ? "Private link copied" : "Copy private link"}
+            {tr(copied ? "Private link copied" : "Copy private link")}
           </button>
         </div>
       </div>
       <div className="container ticket-layout">
         <div>
-          {error && <Notice type="error">{error}</Notice>}
+          {error && <Notice type="error">{tr(error)}</Notice>}
           {booking.tickets.map((ticket, i) => (
             <article className="boarding-pass" key={ticket.id}>
               <div className="pass-header">
                 <div className="brand">
-                  <img src="/images/logo.jpg" alt="DE" />
+                  <img src="/images/logo.jpg" alt={tr("DE")} />
                   <span>
-                    DILANKA<span className="brand-sub">EXPRESS</span>
+                    {tr(" DILANKA")}
+                    <span className="brand-sub">{tr("EXPRESS")}</span>
                   </span>
                 </div>
-                <span>DEMO TICKET · NOT VALID FOR TRAVEL</span>
+                <span>{tr("DEMO TICKET · NOT VALID FOR TRAVEL")}</span>
               </div>
               <div className="pass-content">
                 <div className="pass-details">
-                  <span className="eyebrow">{booking.reference}</span>
+                  <span className="eyebrow">{tr(booking.reference)}</span>
                   <h2>
-                    {booking.pickup}
+                    {tr(booking.pickup)}
                     <ArrowRight size={24} />
-                    {booking.dropoff}
+                    {tr(booking.dropoff)}
                   </h2>
                   <div className="pass-fields">
                     <div>
-                      <span>PASSENGER</span>
+                      <span>{tr("PASSENGER")}</span>
                       <strong>{ticket.passenger}</strong>
                     </div>
                     <div>
-                      <span>SEAT NUMBER</span>
+                      <span>{tr("SEAT NUMBER")}</span>
                       <strong className="seat-number">
-                        {String(ticket.seat).padStart(2, "0")}
+                        {tr(String(ticket.seat).padStart(2, "0"))}
                       </strong>
                     </div>
                     <div>
-                      <span>TRAVEL DATE</span>
-                      <strong>{dateLabel(ticketDeparture)}</strong>
+                      <span>{tr("TRAVEL DATE")}</span>
+                      <strong>{tr(dateLabel(ticketDeparture))}</strong>
                     </div>
                     <div>
-                      <span>BOARDING TIME</span>
-                      <strong>{time(ticketDeparture)}</strong>
+                      <span>{tr("BOARDING TIME")}</span>
+                      <strong>{tr(time(ticketDeparture))}</strong>
                     </div>
                     <div>
-                      <span>VEHICLE</span>
-                      <strong>{booking.trip.bus.registration}</strong>
+                      <span>{tr("VEHICLE")}</span>
+                      <strong>{tr(booking.trip.bus.registration)}</strong>
                     </div>
                     <div>
-                      <span>TICKET STATUS</span>
-                      <strong>{ticket.status.replace("_", " ")}</strong>
+                      <span>{tr("TICKET STATUS")}</span>
+                      <strong>{tr(ticket.status.replace("_", " "))}</strong>
                     </div>
                   </div>
                 </div>
                 <div className="pass-qr">
                   <img
                     src={booking.qrImages[i]}
-                    alt={`Scannable QR for seat ${ticket.seat}`}
+                    alt={tr(`Scannable QR for seat ${ticket.seat}`)}
                   />
-                  <span>SCAN TO VERIFY</span>
+                  <span>{tr("SCAN TO VERIFY")}</span>
                   <Link
                     className="qr-verify-link"
                     href={`/verify/${ticket.qr_token}`}
                     target="_blank"
                   >
-                    Open verification ↗
+                    {tr(" Open verification ↗ ")}
                   </Link>
                   <small>
-                    Verification requires internet.
+                    {tr(" Verification requires internet. ")}
                     <br />
-                    No payment collected.
+                    {tr(" No payment collected. ")}
                   </small>
                 </div>
               </div>
               <div className="pass-footer">
                 <span>
                   <MapPin size={14} />
-                  {
+                  {tr(
                     booking.trip.route.stops.find(
                       (s) => s.name === booking.pickup,
-                    )?.location
-                  }
+                    )?.location,
+                  )}
                 </span>
                 <span>0777 914680</span>
               </div>
@@ -920,51 +979,54 @@ export function TicketPage({ id }: { id: string }) {
         </div>
         <aside>
           <div className="panel">
-            <span className="eyebrow">KEEP THESE SOMEWHERE SAFE</span>
-            <h3>Find this booking again.</h3>
+            <span className="eyebrow">{tr("KEEP THESE SOMEWHERE SAFE")}</span>
+            <h3>{tr("Find this booking again.")}</h3>
             <label>
-              Booking reference
-              <div className="access-value">{booking.reference}</div>
+              {tr(" Booking reference ")}
+              <div className="access-value">{tr(booking.reference)}</div>
             </label>
             <label>
-              Private access code<div className="access-value">{access}</div>
+              {tr(" Private access code")}
+              <div className="access-value">{access}</div>
             </label>
             <p className="small-note">
-              Anyone with your private link or reference and code can view your
-              booking. Share them only with your travel companions.
+              {tr(
+                " Anyone with your private link or reference and code can view your booking. Share them only with your travel companions. ",
+              )}
             </p>
             <div className="price-lines">
               <div>
-                <span>Total demo value</span>
-                <strong>{money(booking.total)}</strong>
+                <span>{tr("Total demo value")}</span>
+                <strong>{tr(money(booking.total))}</strong>
               </div>
             </div>
-            <p className="summary-demo">PAYMENT STATUS: DEMO</p>
+            <p className="summary-demo">{tr("PAYMENT STATUS: DEMO")}</p>
           </div>
           {booking.status === "confirmed" && (
             <div className="panel no-print">
-              <h3>Plans changed?</h3>
+              <h3>{tr("Plans changed?")}</h3>
               <p>
-                You can cancel unboarded demo bookings within the configured
-                cancellation window.
+                {tr(
+                  " You can cancel unboarded demo bookings within the configured cancellation window. ",
+                )}
               </p>
               {askCancel ? (
                 <>
                   <Notice>
-                    Cancel this booking and release all its seats?
+                    {tr(" Cancel this booking and release all its seats? ")}
                   </Notice>
                   <button
                     className="button button-outline"
                     disabled={busy === "cancel"}
                     onClick={cancel}
                   >
-                    Yes, cancel demo booking
+                    {tr(" Yes, cancel demo booking ")}
                   </button>
                   <button
                     className="text-link"
                     onClick={() => setAskCancel(false)}
                   >
-                    Keep booking
+                    {tr(" Keep booking ")}
                   </button>
                 </>
               ) : (
@@ -972,7 +1034,8 @@ export function TicketPage({ id }: { id: string }) {
                   className="text-link"
                   onClick={() => setAskCancel(true)}
                 >
-                  Cancel demo booking <ArrowRight size={16} />
+                  {tr(" Cancel demo booking ")}
+                  <ArrowRight size={16} />
                 </button>
               )}
             </div>
@@ -984,6 +1047,7 @@ export function TicketPage({ id }: { id: string }) {
   );
 }
 export function FindTicket() {
+  const tr = useTranslation();
   const [reference, setReference] = useState(""),
     [code, setCode] = useState(""),
     [error, setError] = useState(""),
@@ -991,26 +1055,29 @@ export function FindTicket() {
   return (
     <>
       <PageTitle
-        eyebrow="YOUR JOURNEY, CLOSE AT HAND"
-        title="Find your ticket."
-        description="No account needed. Use the details saved when you booked."
+        eyebrow={tr("YOUR JOURNEY, CLOSE AT HAND")}
+        title={tr("Find your ticket.")}
+        description={tr(
+          "No account needed. Use the details saved when you booked.",
+        )}
       />
       <section className="container recovery-layout">
         <div className="recovery-story">
           <img
             src="/images/dilanka-hills.webp"
-            alt="Dilanka coach travelling through the hills"
+            alt={tr("Dilanka coach travelling through the hills")}
           />
           <div>
             <Ticket size={28} />
             <h2>
-              Your next chapter.
+              {tr(" Your next chapter. ")}
               <br />
-              <em>Saved right here.</em>
+              <em>{tr("Saved right here.")}</em>
             </h2>
             <p>
-              A seat, a journey, and a ticket to keep close. Return to your
-              booking whenever you need it.
+              {tr(
+                " A seat, a journey, and a ticket to keep close. Return to your booking whenever you need it. ",
+              )}
             </p>
           </div>
         </div>
@@ -1033,42 +1100,43 @@ export function FindTicket() {
             }
           }}
         >
-          <span className="eyebrow">WELCOME BACK</span>
-          <h2>Let’s find your journey.</h2>
+          <span className="eyebrow">{tr("WELCOME BACK")}</span>
+          <h2>{tr("Let’s find your journey.")}</h2>
           <p className="recovery-intro">
-            Enter both details from your booking confirmation. Your private code
-            protects your passenger information.
+            {tr(
+              " Enter both details from your booking confirmation. Your private code protects your passenger information. ",
+            )}
           </p>
-          {error && <Notice type="error">{error}</Notice>}
+          {error && <Notice type="error">{tr(error)}</Notice>}
           <label>
-            Booking reference
+            {tr(" Booking reference ")}
             <input
               required
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              placeholder="DE-XXXXXXXXXX"
+              placeholder={tr("DE-XXXXXXXXXX")}
             />
           </label>
           <label>
-            Private access code
+            {tr(" Private access code ")}
             <input
               required
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="The code shown on confirmation"
+              placeholder={tr("The code shown on confirmation")}
             />
           </label>
           <button className="button button-dark full-width" disabled={busy}>
-            {busy ? "Finding your tickets…" : "Find my tickets"}
+            {tr(busy ? "Finding your tickets…" : "Find my tickets")}
             <ArrowRight size={17} />
           </button>
           <p className="small-note">
-            Lost your code? This prototype does not send recovery emails. Keep
-            your original private ticket link, or ask the demo administrator for
-            help.
+            {tr(
+              " Lost your code? This prototype does not send recovery emails. Keep your original private ticket link, or ask the demo administrator for help. ",
+            )}
           </p>
           <Link href="/help" className="text-link">
-            Need a little guidance?
+            {tr(" Need a little guidance? ")}
             <ArrowRight size={16} />
           </Link>
         </form>
@@ -1078,6 +1146,7 @@ export function FindTicket() {
   );
 }
 export function VerifyPage({ token }: { token: string }) {
+  const tr = useTranslation();
   const [result, setResult] = useState<any>(null),
     [error, setError] = useState("");
   useEffect(() => {
@@ -1091,63 +1160,71 @@ export function VerifyPage({ token }: { token: string }) {
     <div className="container verification-wrap">
       <div className="panel verification">
         <div className="verification-brand">
-          <img src="/images/logo.jpg" alt="Dilanka Express" />
+          <img src="/images/logo.jpg" alt={tr("Dilanka Express")} />
           <span>
-            DILANKA EXPRESS<small>YOUR JOURNEY · VERIFIED</small>
+            {tr(" DILANKA EXPRESS")}
+            <small>{tr("YOUR JOURNEY · VERIFIED")}</small>
           </span>
         </div>
         <span className={`success-icon ${!valid ? "cancelled" : ""}`}>
           {valid ? <CheckCircle2 size={35} /> : <XCircle size={35} />}
         </span>
-        <span className="eyebrow">DILANKA EXPRESS · QR VERIFICATION</span>
+        <span className="eyebrow">
+          {tr("DILANKA EXPRESS · QR VERIFICATION")}
+        </span>
         <h1>
-          {error
-            ? "Ticket not found"
-            : result.status === "checked_in"
-              ? "Already checked in"
-              : result.booking_status === "cancelled"
-                ? "Ticket cancelled"
-                : valid
-                  ? "Demo ticket verified"
-                  : "Ticket unavailable"}
+          {tr(
+            error
+              ? "Ticket not found"
+              : result.status === "checked_in"
+                ? "Already checked in"
+                : result.booking_status === "cancelled"
+                  ? "Ticket cancelled"
+                  : valid
+                    ? "Demo ticket verified"
+                    : "Ticket unavailable",
+          )}
         </h1>
         <Notice>
-          This is a demonstration ticket. It is not valid for travel and no
-          payment was collected.
+          {tr(
+            " This is a demonstration ticket. It is not valid for travel and no payment was collected. ",
+          )}
         </Notice>
         {error ? (
-          <p>{error}</p>
+          <p>{tr(error)}</p>
         ) : (
           <>
             <h2>
-              {result.route.origin} → {result.route.destination}
+              {tr(result.route.origin)} → {tr(result.route.destination)}
             </h2>
             <dl className="review-list">
               <div>
-                <dt>Travel date</dt>
-                <dd>{dateLabel(result.departure)}</dd>
+                <dt>{tr("Travel date")}</dt>
+                <dd>{tr(dateLabel(result.departure))}</dd>
               </div>
               <div>
-                <dt>Departure</dt>
-                <dd>{time(result.departure)}</dd>
+                <dt>{tr("Departure")}</dt>
+                <dd>{tr(time(result.departure))}</dd>
               </div>
               <div>
-                <dt>Seat</dt>
-                <dd>{result.seat}</dd>
+                <dt>{tr("Seat")}</dt>
+                <dd>{tr(result.seat)}</dd>
               </div>
               <div>
-                <dt>Status</dt>
-                <dd>{result.status.replace("_", " ")}</dd>
+                <dt>{tr("Status")}</dt>
+                <dd>{tr(result.status.replace("_", " "))}</dd>
               </div>
             </dl>
             <p className="small-note">
-              Opening this page does not check in a passenger. Only authorised
-              staff can check tickets in.
+              {tr(
+                " Opening this page does not check in a passenger. Only authorised staff can check tickets in. ",
+              )}
             </p>
           </>
         )}
         <Link className="text-link" href="/">
-          Back to Dilanka Express <ArrowRight size={16} />
+          {tr(" Back to Dilanka Express ")}
+          <ArrowRight size={16} />
         </Link>
       </div>
     </div>

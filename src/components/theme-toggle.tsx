@@ -1,9 +1,11 @@
 "use client";
+import { useTranslation } from "./locale";
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
 export function ThemeToggle() {
+  const tr = useTranslation();
   const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -43,10 +45,12 @@ export function ThemeToggle() {
     <button
       type="button"
       className="theme-toggle header-control"
-      aria-label={
-        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-      }
-      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={tr(
+        theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
+      )}
+      title={tr(
+        theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
+      )}
       aria-pressed={theme === "dark"}
       onClick={() => {
         const next = theme === "dark" ? "light" : "dark";

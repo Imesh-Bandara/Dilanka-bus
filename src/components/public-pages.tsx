@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -33,6 +34,7 @@ export function SearchForm({
   initialTo?: string;
   initialDate?: string;
 }) {
+  const tr = useTranslation();
   const router = useRouter();
   const { t } = useLocale();
   const [from, setFrom] = useState(initialFrom),
@@ -66,24 +68,26 @@ export function SearchForm({
       <label>
         <span>
           <MapPin size={15} />
-          {t.from}
+          {tr(t.from)}
         </span>
         <select
           required
-          aria-label={t.from}
+          aria-label={tr(t.from)}
           value={from}
           onChange={(e) => setFrom(e.target.value)}
         >
-          <option value="">Where from?</option>
+          <option value="">{tr("Where from?")}</option>
           {places.map((p) => (
-            <option key={p}>{p}</option>
+            <option key={p} value={p}>
+              {tr(p)}
+            </option>
           ))}
         </select>
       </label>
       <button
         type="button"
         className="swap icon-button"
-        aria-label="Swap origin and destination"
+        aria-label={tr("Swap origin and destination")}
         onClick={() => {
           setFrom(to);
           setTo(from);
@@ -94,30 +98,32 @@ export function SearchForm({
       <label>
         <span>
           <MapPin size={15} />
-          {t.to}
+          {tr(t.to)}
         </span>
         <select
           required
-          aria-label={t.to}
+          aria-label={tr(t.to)}
           value={to}
           onChange={(e) => setTo(e.target.value)}
         >
-          <option value="">Where to?</option>
+          <option value="">{tr("Where to?")}</option>
           {places
             .filter((p) => p !== from)
             .map((p) => (
-              <option key={p}>{p}</option>
+              <option key={p} value={p}>
+                {tr(p)}
+              </option>
             ))}
         </select>
       </label>
       <label className="date-input">
         <span>
           <CalendarDays size={15} />
-          {t.date}
+          {tr(t.date)}
         </span>
         <input
           required
-          aria-label={t.date}
+          aria-label={tr(t.date)}
           type="date"
           min={sriDate()}
           value={date}
@@ -125,10 +131,10 @@ export function SearchForm({
         />
       </label>
       <button className="button button-gold search-submit" type="submit">
-        {t.search}
+        {tr(t.search)}
         <ArrowRight size={19} />
       </button>
-      {error && <div className="search-error">{error}</div>}
+      {error && <div className="search-error">{tr(error)}</div>}
     </form>
   );
 }
@@ -136,6 +142,7 @@ export function Home() {
   return <LandingPage search={<SearchForm />} />;
 }
 export function SearchPage() {
+  const tr = useTranslation();
   const sp = useSearchParams();
   const from = sp.get("from") || "",
     to = sp.get("to") || "",
@@ -182,9 +189,13 @@ export function SearchPage() {
   return (
     <>
       <PageTitle
-        eyebrow="YOUR JOURNEY STARTS HERE"
-        title={from && to ? `${from} to ${to}` : "Where would you like to go?"}
-        description="A clear view of your journey. A seat that feels right."
+        eyebrow={tr("YOUR JOURNEY STARTS HERE")}
+        title={tr(
+          from && to ? `${from} to ${to}` : "Where would you like to go?",
+        )}
+        description={tr(
+          "A clear view of your journey. A seat that feels right.",
+        )}
       />
       <div className="container">
         <div className="search-card results-search">
@@ -197,41 +208,44 @@ export function SearchPage() {
           />
         </div>
         <Notice>
-          Client preview: upcoming trips, fares and intermediate times are
-          demonstration data. No payment is collected.
+          {tr(
+            " Client preview: upcoming trips, fares and intermediate times are demonstration data. No payment is collected. ",
+          )}
         </Notice>
         <div className="results-toolbar">
           <span>
-            <strong>{loading ? "…" : filtered.length}</strong> departures ·{" "}
-            {dateLabel(`${date}T12:00:00+05:30`)}
+            <strong>{tr(loading ? "…" : filtered.length)}</strong>{" "}
+            {tr(" departures ·")}
+            {tr(" ")}
+            {tr(dateLabel(`${date}T12:00:00+05:30`))}
           </span>
           <div>
             <select
-              aria-label="Filter bus layout"
+              aria-label={tr("Filter bus layout")}
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
-              <option value="all">All coaches</option>
-              <option value="49">49-seat luxury</option>
-              <option value="51">51-seat premium</option>
-              <option value="53">53-seat NE-3230</option>
+              <option value="all">{tr("All coaches")}</option>
+              <option value="49">{tr("49-seat luxury")}</option>
+              <option value="51">{tr("51-seat premium")}</option>
+              <option value="53">{tr("53-seat NE-3230")}</option>
             </select>
             <select
-              aria-label="Filter departure time"
+              aria-label={tr("Filter departure time")}
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
             >
-              <option value="all">Any time</option>
-              <option value="day">Before 5 PM</option>
-              <option value="evening">After 5 PM</option>
+              <option value="all">{tr("Any time")}</option>
+              <option value="day">{tr("Before 5 PM")}</option>
+              <option value="evening">{tr("After 5 PM")}</option>
             </select>
             <select
-              aria-label="Sort journeys"
+              aria-label={tr("Sort journeys")}
               value={sort}
               onChange={(e) => setSort(e.target.value)}
             >
-              <option value="time">Earliest departure</option>
-              <option value="price">Lowest fare</option>
+              <option value="time">{tr("Earliest departure")}</option>
+              <option value="price">{tr("Lowest fare")}</option>
             </select>
           </div>
         </div>
@@ -239,7 +253,8 @@ export function SearchPage() {
           <Loading />
         ) : error ? (
           <Notice type="error">
-            {error} <button onClick={() => location.reload()}>Try again</button>
+            {tr(error)}{" "}
+            <button onClick={() => location.reload()}>{tr("Try again")}</button>
           </Notice>
         ) : filtered.length ? (
           filtered.map((t) => {
@@ -262,76 +277,86 @@ export function SearchPage() {
                   <img
                     className="trip-coach-photo"
                     src="/images/fleet.webp"
-                    alt="Dilanka Yutong coaches · fleet reference photo"
+                    alt={tr("Dilanka Yutong coaches · fleet reference photo")}
                     loading="lazy"
                   />
                   <div>
-                    <h3>{t.bus.name}</h3>
+                    <h3>{tr(t.bus.name)}</h3>
                     <span>
-                      {t.bus.registration} · {t.bus.capacity} seats
+                      {tr(t.bus.registration)} · {tr(t.bus.capacity)}{" "}
+                      {tr(" seats ")}
                     </span>
                   </div>
-                  <span className="badge">DEMO SERVICE</span>
+                  <span className="badge">{tr("DEMO SERVICE")}</span>
                   <small className="trip-photo-note">
-                    Fleet photo · assignment is illustrative
+                    {tr(" Fleet photo · assignment is illustrative ")}
                   </small>
                 </div>
                 <div className="trip-main">
                   <div className="trip-time">
-                    <strong>{time(boardTime)}</strong>
-                    <span>{startStop.name}</span>
-                    <small>{dateLabel(boardTime)}</small>
+                    <strong>{tr(time(boardTime))}</strong>
+                    <span>{tr(startStop.name)}</span>
+                    <small>{tr(dateLabel(boardTime))}</small>
                   </div>
                   <div className="trip-line">
                     <span>
-                      {Math.floor(duration / 60)}h {duration % 60}m
+                      {tr(Math.floor(duration / 60))}
+                      {tr("h ")}
+                      {tr(duration % 60)}
+                      {tr("m ")}
                     </span>
                     <div>
                       <i />
                       <span />
                       <i />
                     </div>
-                    <small>{t.route.via}</small>
+                    <small>{tr(t.route.via)}</small>
                   </div>
                   <div className="trip-time">
-                    <strong>{time(endTime)}</strong>
-                    <span>{endStop.name}</span>
+                    <strong>{tr(time(endTime))}</strong>
+                    <span>{tr(endStop.name)}</span>
                     <small>
                       {sriDate(new Date(boardTime)) !==
                       sriDate(new Date(endTime)) ? (
-                        <b className="next-day">+1 day · </b>
+                        <b className="next-day">{tr("+1 day · ")}</b>
                       ) : null}
-                      {dateLabel(endTime)}
+                      {tr(dateLabel(endTime))}
                     </small>
                   </div>
                   <div className="trip-price">
-                    <small>Per seat, including fee</small>
-                    <strong>{money(t.fare + t.fee)}</strong>
+                    <small>{tr("Per seat, including fee")}</small>
+                    <strong>{tr(money(t.fare + t.fee))}</strong>
                     <span>
-                      {money(t.fare)} fare + {money(t.fee)} fee
+                      {tr(money(t.fare))} {tr(" fare + ")}
+                      {tr(money(t.fee))} {tr(" fee ")}
                     </span>
                   </div>
                   <div className="trip-action">
                     {closed ? (
-                      <span className="badge muted">Booking closed</span>
+                      <span className="badge muted">
+                        {tr("Booking closed")}
+                      </span>
                     ) : t.available ? (
                       <Link
                         className="button button-dark"
                         href={`/book/${t.id}?pickup=${encodeURIComponent(from || t.route.origin)}&dropoff=${encodeURIComponent(to || t.route.destination)}`}
                       >
-                        Choose seats <ArrowRight size={17} />
+                        {tr(" Choose seats ")}
+                        <ArrowRight size={17} />
                       </Link>
                     ) : (
-                      <span className="badge muted">Sold out</span>
+                      <span className="badge muted">{tr("Sold out")}</span>
                     )}
-                    <small>{t.available} seats available</small>
+                    <small>
+                      {tr(t.available)} {tr(" seats available")}
+                    </small>
                   </div>
                 </div>
                 <div className="trip-bottom">
                   {t.bus.amenities.map((a) => (
                     <span key={a}>
                       <Check size={14} />
-                      {a}
+                      {tr(a)}
                     </span>
                   ))}
                 </div>
@@ -347,13 +372,15 @@ export function SearchPage() {
         ) : (
           <div className="empty-state">
             <BusFront size={42} />
-            <h2>No departures match this journey.</h2>
+            <h2>{tr("No departures match this journey.")}</h2>
             <p>
-              Try another date, route or filter. Our demo timetable covers the
-              next two weeks.
+              {tr(
+                " Try another date, route or filter. Our demo timetable covers the next two weeks. ",
+              )}
             </p>
             <Link href="/routes" className="button button-dark">
-              Explore routes <ArrowRight size={17} />
+              {tr(" Explore routes ")}
+              <ArrowRight size={17} />
             </Link>
           </div>
         )}

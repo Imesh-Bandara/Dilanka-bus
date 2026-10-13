@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./locale";
 import { useEffect, useRef, useState } from "react";
 import { Play, ArrowLeft, ArrowRight, X, ExternalLink } from "lucide-react";
 export const galleryPhotos = [
@@ -37,15 +38,19 @@ const videos = [
   },
 ];
 export function HeroPhotos() {
+  const tr = useTranslation();
   const [index, setIndex] = useState(2);
   const photo = galleryPhotos[index];
   return (
     <>
-      <img src={photo.src} alt={photo.alt} fetchPriority="high" />
-      <div className="hero-photo-picker" aria-label="Hero photograph selection">
+      <img src={photo.src} alt={tr(photo.alt)} fetchPriority="high" />
+      <div
+        className="hero-photo-picker"
+        aria-label={tr("Hero photograph selection")}
+      >
         <button
           type="button"
-          aria-label="Previous hero photo"
+          aria-label={tr("Previous hero photo")}
           onClick={() =>
             setIndex((index + galleryPhotos.length - 1) % galleryPhotos.length)
           }
@@ -53,12 +58,12 @@ export function HeroPhotos() {
           <ArrowLeft size={14} />
         </button>
         <span>
-          {String(index + 1).padStart(2, "0")} /{" "}
-          {String(galleryPhotos.length).padStart(2, "0")}
+          {tr(String(index + 1).padStart(2, "0"))} /{tr(" ")}
+          {tr(String(galleryPhotos.length).padStart(2, "0"))}
         </span>
         <button
           type="button"
-          aria-label="Next hero photo"
+          aria-label={tr("Next hero photo")}
           onClick={() => setIndex((index + 1) % galleryPhotos.length)}
         >
           <ArrowRight size={14} />
@@ -68,6 +73,7 @@ export function HeroPhotos() {
   );
 }
 export function JourneyMedia() {
+  const tr = useTranslation();
   const dialog = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0),
     [video, setVideo] = useState<number | null>(null),
@@ -110,33 +116,40 @@ export function JourneyMedia() {
     <section className="container section journey-media">
       <div className="section-heading">
         <div>
-          <span className="eyebrow">A GLIMPSE OF THE JOURNEY</span>
-          <h2>See the road our way.</h2>
+          <span className="eyebrow">{tr("A GLIMPSE OF THE JOURNEY")}</span>
+          <h2>{tr("See the road our way.")}</h2>
         </div>
         <p>
-          Real moments from Dilanka Express.
-          <br />A little inspiration before you travel.
+          {tr(" Real moments from Dilanka Express. ")}
+          <br />
+          {tr("A little inspiration before you travel. ")}
         </p>
       </div>
       <div className="media-grid">
         <div
           className="photo-stage"
-          aria-roledescription="carousel"
-          aria-label="Dilanka photo gallery"
+          aria-roledescription={tr("carousel")}
+          aria-label={tr("Dilanka photo gallery")}
         >
-          <img key={photo.src} src={photo.src} alt={photo.alt} loading="lazy" />
+          <img
+            key={photo.src}
+            src={photo.src}
+            alt={tr(photo.alt)}
+            loading="lazy"
+          />
           <div className="photo-shade" />
           <div className="photo-caption" aria-live="polite">
-            <span className="eyebrow">{photo.caption}</span>
-            <h3>{photo.title}</h3>
+            <span className="eyebrow">{tr(photo.caption)}</span>
+            <h3>{tr(photo.title)}</h3>
             <a href={photo.source} target="_blank" rel="noopener noreferrer">
-              From Dilanka’s Facebook <ExternalLink size={12} />
+              {tr(" From Dilanka’s Facebook ")}
+              <ExternalLink size={12} />
             </a>
           </div>
           <div className="photo-controls">
             <button
               type="button"
-              aria-label="Previous photo"
+              aria-label={tr("Previous photo")}
               onClick={() =>
                 setIndex(
                   (index + galleryPhotos.length - 1) % galleryPhotos.length,
@@ -146,12 +159,12 @@ export function JourneyMedia() {
               <ArrowLeft size={18} />
             </button>
             <span>
-              {String(index + 1).padStart(2, "0")} /{" "}
-              {String(galleryPhotos.length).padStart(2, "0")}
+              {tr(String(index + 1).padStart(2, "0"))} /{tr(" ")}
+              {tr(String(galleryPhotos.length).padStart(2, "0"))}
             </span>
             <button
               type="button"
-              aria-label="Next photo"
+              aria-label={tr("Next photo")}
               onClick={() => setIndex((index + 1) % galleryPhotos.length)}
             >
               <ArrowRight size={18} />
@@ -162,7 +175,7 @@ export function JourneyMedia() {
               <button
                 type="button"
                 key={p.src}
-                aria-label={`Show photo ${i + 1}: ${p.caption}`}
+                aria-label={tr(`Show photo ${i + 1}: ${p.caption}`)}
                 aria-pressed={index === i}
                 onClick={() => setIndex(i)}
               />
@@ -170,15 +183,16 @@ export function JourneyMedia() {
           </div>
         </div>
         <div className="video-column">
-          <span className="eyebrow">MOMENTS IN MOTION</span>
+          <span className="eyebrow">{tr("MOMENTS IN MOTION")}</span>
           <h3>
-            A window
+            {tr(" A window ")}
             <br />
-            to the journey.
+            {tr(" to the journey. ")}
           </h3>
           <p>
-            Watch Dilanka coaches out on the road, straight from the company’s
-            video collection.
+            {tr(
+              " Watch Dilanka coaches out on the road, straight from the company’s video collection. ",
+            )}
           </p>
           {videos.map((v, i) => (
             <button
@@ -194,8 +208,8 @@ export function JourneyMedia() {
                 <Play size={18} fill="currentColor" />
               </span>
               <span>
-                <strong>{v.title}</strong>
-                <small>{v.subtitle}</small>
+                <strong>{tr(v.title)}</strong>
+                <small>{tr(v.subtitle)}</small>
               </span>
               <ArrowRight size={18} />
             </button>
@@ -207,7 +221,7 @@ export function JourneyMedia() {
           className="video-dialog"
           role="dialog"
           aria-modal="true"
-          aria-label={videos[video].title}
+          aria-label={tr(videos[video].title)}
           onClick={() => {
             setVideo(null);
             setPlaying(false);
@@ -220,13 +234,13 @@ export function JourneyMedia() {
           >
             <div className="video-dialog-top">
               <div>
-                <span className="eyebrow">DILANKA EXPRESS FILMS</span>
-                <h3>{videos[video].title}</h3>
+                <span className="eyebrow">{tr("DILANKA EXPRESS FILMS")}</span>
+                <h3>{tr(videos[video].title)}</h3>
               </div>
               <button
                 autoFocus
                 type="button"
-                aria-label="Close video"
+                aria-label={tr("Close video")}
                 onClick={() => {
                   setVideo(null);
                   setPlaying(false);
@@ -238,7 +252,7 @@ export function JourneyMedia() {
             {playing ? (
               <iframe
                 src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(videos[video].url)}&show_text=false&width=960&autoplay=true`}
-                title={videos[video].title}
+                title={tr(videos[video].title)}
                 allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                 allowFullScreen
               />
@@ -246,29 +260,31 @@ export function JourneyMedia() {
               <div className="video-consent">
                 <img
                   src="/images/dilanka-hills.webp"
-                  alt="Dilanka coach on the road"
+                  alt={tr("Dilanka coach on the road")}
                 />
                 <button
                   className="button button-gold"
                   type="button"
                   onClick={() => setPlaying(true)}
                 >
-                  <Play size={19} /> Play company video
+                  <Play size={19} /> {tr(" Play company video ")}
                 </button>
                 <p>
-                  Loads Facebook’s video player. Playback may depend on Facebook
-                  sign-in and browser settings.
+                  {tr(
+                    " Loads Facebook’s video player. Playback may depend on Facebook sign-in and browser settings. ",
+                  )}
                 </p>
               </div>
             )}
             <div className="video-fallback">
-              <span>Player unavailable?</span>
+              <span>{tr("Player unavailable?")}</span>
               <a
                 href={videos[video].url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Watch on Facebook <ExternalLink size={14} />
+                {tr(" Watch on Facebook ")}
+                <ExternalLink size={14} />
               </a>
             </div>
           </div>

@@ -1,7 +1,10 @@
 "use client";
+import { useTranslation, useLocale } from "./locale";
+export { useLocale } from "./locale";
+import type { Language } from "@/lib/i18n";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
   Menu,
@@ -13,79 +16,13 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
-type Lang = "en" | "si" | "ta";
-const words = {
-  en: {
-    home: "Home",
-    routes: "Our routes",
-    fleet: "Our fleet",
-    about: "Our story",
-    contact: "Contact",
-    book: "Book a journey",
-    find: "Find my ticket",
-    from: "From",
-    to: "To",
-    date: "Travel date",
-    search: "Find your journey",
-    seats: "Choose your seats",
-    continue: "Continue",
-    passenger: "Passenger details",
-    review: "Review booking",
-    confirm: "Confirm demo booking",
-  },
-  si: {
-    home: "මුල් පිටුව",
-    routes: "ගමන් මාර්ග",
-    fleet: "බස් රථ",
-    about: "අප ගැන",
-    contact: "අමතන්න",
-    book: "ආසන වෙන් කරන්න",
-    find: "මගේ ටිකට්පත",
-    from: "පිටත්වීම",
-    to: "ගමනාන්තය",
-    date: "ගමන් දිනය",
-    search: "ගමන සොයන්න",
-    seats: "ආසන තෝරන්න",
-    continue: "ඉදිරියට",
-    passenger: "මගී විස්තර",
-    review: "වෙන්කිරීම පරීක්ෂා කරන්න",
-    confirm: "ආදර්ශ වෙන්කිරීම තහවුරු කරන්න",
-  },
-  ta: {
-    home: "முகப்பு",
-    routes: "வழித்தடங்கள்",
-    fleet: "பேருந்துகள்",
-    about: "எங்களைப் பற்றி",
-    contact: "தொடர்பு",
-    book: "பயணத்தை முன்பதிவு செய்",
-    find: "எனது பயணச்சீட்டு",
-    from: "புறப்படும் இடம்",
-    to: "செல்லும் இடம்",
-    date: "பயணத் தேதி",
-    search: "பயணத்தைத் தேடு",
-    seats: "இருக்கைகளைத் தேர்வு செய்",
-    continue: "தொடரவும்",
-    passenger: "பயணிகள் விவரங்கள்",
-    review: "முன்பதிவை சரிபார்",
-    confirm: "மாதிரி முன்பதிவை உறுதிசெய்",
-  },
-};
-const Locale = createContext({ lang: "en" as Lang, t: words.en });
-export const useLocale = () => useContext(Locale);
 export function Site({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("en"),
-    [open, setOpen] = useState(false);
+  const tr = useTranslation();
+  const { lang, setLang, t } = useLocale();
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const header = useRef<HTMLElement>(null),
     menuButton = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("de-language") as Lang;
-      if (saved && saved in words) setLang(saved);
-    } catch {
-      /* Keep the default language if browser storage is unavailable. */
-    }
-  }, []);
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -113,10 +50,7 @@ export function Site({ children }: { children: React.ReactNode }) {
       desktop.removeEventListener("change", closeOnDesktop);
     };
   }, [open]);
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
-  const t = words[lang];
+
   const navigation = [
     ["/routes", t.routes],
     ["/fleet", t.fleet],
@@ -124,29 +58,39 @@ export function Site({ children }: { children: React.ReactNode }) {
     ["/contact", t.contact],
   ];
   return (
-    <Locale.Provider value={{ lang, t }}>
+    <>
       <a className="skip-link" href="#main-content">
-        Skip to content
+        {tr(" Skip to content ")}
       </a>
       <div className="demo-strip">
-        <span className="demo-dot" /> CLIENT PREVIEW{" "}
-        <span className="strip-divider">/</span> Explore freely. All bookings
-        are demonstrations.
+        <span className="demo-dot" /> <span>{tr(" CLIENT PREVIEW")}</span>
+        {tr(" ")}
+        <span className="strip-divider">/</span>{" "}
+        <span className="demo-message">
+          {tr(" Explore freely. All bookings are demonstrations. ")}
+        </span>
       </div>
       <header ref={header} className="site-header">
         <div className="header-shell">
-          <Link href="/" className="brand" aria-label="Dilanka Express home">
-            <img src="/images/logo.jpg" alt="DE" />
+          <Link
+            href="/"
+            className="brand"
+            aria-label={tr("Dilanka Express home")}
+          >
+            <img src="/images/logo.jpg" alt={tr("DE")} />
             <span>
-              DILANKA<span className="brand-sub">EXPRESS · SRI LANKA</span>
+              {tr(" DILANKA")}
+              <span className="brand-sub">{tr("EXPRESS · SRI LANKA")}</span>
             </span>
           </Link>
           <nav
             id="primary-navigation"
             className={open ? "primary-nav is-open" : "primary-nav"}
-            aria-label="Main navigation"
+            aria-label={tr("Main navigation")}
           >
-            <span className="mobile-nav-heading eyebrow">EXPLORE DILANKA</span>
+            <span className="mobile-nav-heading eyebrow">
+              {tr("EXPLORE DILANKA")}
+            </span>
             <div className="primary-nav-rail">
               {navigation.map(([href, label]) => (
                 <Link
@@ -156,7 +100,7 @@ export function Site({ children }: { children: React.ReactNode }) {
                   aria-current={pathname === href ? "page" : undefined}
                   onClick={() => setOpen(false)}
                 >
-                  {label}
+                  {tr(label)}
                   <ArrowUpRight className="mobile-link-arrow" size={17} />
                 </Link>
               ))}
@@ -167,7 +111,7 @@ export function Site({ children }: { children: React.ReactNode }) {
                 className="header-book"
                 onClick={() => setOpen(false)}
               >
-                {t.book}
+                {tr(t.book)}
                 <ArrowUpRight size={18} />
               </Link>
               <Link
@@ -181,12 +125,12 @@ export function Site({ children }: { children: React.ReactNode }) {
                 onClick={() => setOpen(false)}
               >
                 <Ticket size={18} />
-                {t.find}
+                {tr(t.find)}
                 <ArrowRight size={16} />
               </Link>
               <div className="mobile-nav-support">
                 <Link href="/help" onClick={() => setOpen(false)}>
-                  Help & policies
+                  {tr(" Help & policies ")}
                 </Link>
                 <a href="tel:+94777914680">
                   <Phone size={14} />
@@ -199,16 +143,13 @@ export function Site({ children }: { children: React.ReactNode }) {
             <label className="header-language header-control">
               <Globe2 size={16} />
               <select
-                aria-label="Interface language"
+                aria-label={tr("Interface language")}
                 value={lang}
                 onChange={(e) => {
-                  setLang(e.target.value as Lang);
-                  try {
-                    localStorage.setItem("de-language", e.target.value);
-                  } catch {}
+                  setLang(e.target.value as Language);
                 }}
               >
-                <option value="en">EN</option>
+                <option value="en">{tr("EN")}</option>
                 <option value="si">සිං</option>
                 <option value="ta">தமிழ்</option>
               </select>
@@ -219,7 +160,7 @@ export function Site({ children }: { children: React.ReactNode }) {
             <Link
               href="/find-ticket"
               className="header-ticket"
-              aria-label={t.find}
+              aria-label={tr(t.find)}
               aria-current={
                 pathname.startsWith("/ticket/") || pathname === "/find-ticket"
                   ? "page"
@@ -227,7 +168,7 @@ export function Site({ children }: { children: React.ReactNode }) {
               }
             >
               <Ticket size={17} />
-              <span>{t.find}</span>
+              <span>{tr(t.find)}</span>
             </Link>
             <Link
               href="/search"
@@ -238,7 +179,7 @@ export function Site({ children }: { children: React.ReactNode }) {
                   : undefined
               }
             >
-              {t.book}
+              {tr(t.book)}
               <ArrowUpRight size={16} />
             </Link>
             <button
@@ -246,7 +187,7 @@ export function Site({ children }: { children: React.ReactNode }) {
               type="button"
               className="header-menu header-control"
               onClick={() => setOpen(!open)}
-              aria-label={open ? "Close menu" : "Open menu"}
+              aria-label={tr(open ? "Close menu" : "Open menu")}
               aria-expanded={open}
               aria-controls="primary-navigation"
             >
@@ -264,80 +205,84 @@ export function Site({ children }: { children: React.ReactNode }) {
             : `interior-content interior-${pathname.split("/")[1] || "page"}`
         }
       >
-        {children}
+        {tr(children)}
       </main>
       <footer>
         <div className="container footer-top">
           <div>
             <Link href="/" className="brand footer-brand">
-              <img src="/images/logo.jpg" alt="DE" />
+              <img src="/images/logo.jpg" alt={tr("DE")} />
               <span>
-                DILANKA<span className="brand-sub">EXPRESS · SRI LANKA</span>
+                {tr(" DILANKA")}
+                <span className="brand-sub">{tr("EXPRESS · SRI LANKA")}</span>
               </span>
             </Link>
             <h3>
-              A better journey begins
+              {tr(" A better journey begins ")}
               <br />
-              with a little care.
+              {tr(" with a little care. ")}
             </h3>
             <p>
-              Connecting people and places,
+              {tr(" Connecting people and places, ")}
               <br />
-              from Ampara to the road ahead.
+              {tr(" from Ampara to the road ahead. ")}
             </p>
           </div>
           <div>
-            <span className="eyebrow">EXPLORE</span>
-            <Link href="/routes">Routes & schedules</Link>
-            <Link href="/fleet">Our fleet</Link>
-            <Link href="/about">Our story</Link>
-            <Link href="/help">Help & booking policies</Link>
+            <span className="eyebrow">{tr("EXPLORE")}</span>
+            <Link href="/routes">{tr("Routes & schedules")}</Link>
+            <Link href="/fleet">{tr("Our fleet")}</Link>
+            <Link href="/about">{tr("Our story")}</Link>
+            <Link href="/help">{tr("Help & booking policies")}</Link>
           </div>
           <div>
-            <span className="eyebrow">LET’S TALK</span>
+            <span className="eyebrow">{tr("LET’S TALK")}</span>
             <a href="tel:+94777914680">
               0777 914680 <ArrowUpRight size={14} />
             </a>
             <a href="tel:+94777205634">0777 205634</a>
             <a href="mailto:dilankaexpress@gmail.com">
-              dilankaexpress@gmail.com
+              {tr(" dilankaexpress@gmail.com ")}
             </a>
             <p>
-              BL-26, 3rd Lane, Ampara
+              {tr(" BL-26, 3rd Lane, Ampara ")}
               <br />
-              Sri Lanka
+              {tr(" Sri Lanka ")}
             </p>
           </div>
           <div className="footer-cta">
-            <span className="eyebrow">YOUR NEXT CHAPTER</span>
+            <span className="eyebrow">{tr("YOUR NEXT CHAPTER")}</span>
             <p>
-              Somewhere to be?
+              {tr(" Somewhere to be? ")}
               <br />
-              We’ll help you get there.
+              {tr(" We’ll help you get there. ")}
             </p>
             <Link href="/search" className="text-link">
-              Find a journey <ArrowRight size={18} />
+              {tr(" Find a journey ")}
+              <ArrowRight size={18} />
             </Link>
           </div>
         </div>
         <div className="container footer-bottom">
           <span>
-            © {new Date().getFullYear()} Dilanka Express · Demonstration website
+            © {tr(new Date().getFullYear())}{" "}
+            {tr(" Dilanka Express · Demonstration website ")}
           </span>
           <div>
-            <Link href="/help#privacy">Privacy</Link>
-            <Link href="/staff">Staff portal</Link>
+            <Link href="/help#privacy">{tr("Privacy")}</Link>
+            <Link href="/staff">{tr("Staff portal")}</Link>
             <a
               href="https://www.facebook.com/people/Dilanka-Express/100090241902532/"
               target="_blank"
               rel="noreferrer"
             >
-              Facebook <ArrowUpRight size={12} />
+              {tr(" Facebook ")}
+              <ArrowUpRight size={12} />
             </a>
           </div>
         </div>
       </footer>
-    </Locale.Provider>
+    </>
   );
 }
 export function Notice({
@@ -347,20 +292,22 @@ export function Notice({
   children: React.ReactNode;
   type?: "info" | "error" | "success";
 }) {
+  const tr = useTranslation();
   return (
     <div
       role={type === "error" ? "alert" : "status"}
       className={`notice ${type}`}
     >
-      {children}
+      {tr(children)}
     </div>
   );
 }
 export function Loading() {
+  const tr = useTranslation();
   return (
     <div className="container loading">
       <span className="spinner" />
-      <p>Getting your journey ready…</p>
+      <p>{tr("Getting your journey ready…")}</p>
     </div>
   );
 }
@@ -390,20 +337,23 @@ export function PageTitle({
   title: string;
   description: string;
 }) {
+  const tr = useTranslation();
   return (
     <div className="page-title container">
       <div className="breadcrumbs">
-        <Link href="/">Home</Link>
+        <Link href="/">{tr("Home")}</Link>
         <span>/</span>
         <span>
-          {eyebrow.includes("TICKET") || title.includes("ticket")
-            ? "Your ticket"
-            : "Your journey"}
+          {tr(
+            eyebrow.includes("TICKET") || title.includes("ticket")
+              ? "Your ticket"
+              : "Your journey",
+          )}
         </span>
       </div>
-      <span className="eyebrow">{eyebrow}</span>
-      <h1>{title}</h1>
-      <p>{description}</p>
+      <span className="eyebrow">{tr(eyebrow)}</span>
+      <h1>{tr(title)}</h1>
+      <p>{tr(description)}</p>
     </div>
   );
 }

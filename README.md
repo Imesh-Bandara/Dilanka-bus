@@ -19,6 +19,7 @@ The local server automatically creates `.data/staff-access.txt` on first initial
 
 - Original Dilanka-branded responsive home, route, fleet, company, contact and help pages.
 - Responsive sticky navigation with clear active-page outlines and a saved light/dark appearance preference. See `research/NAVIGATION_AND_THEME.md` for references and behaviour.
+- English, Sinhala and Tamil content across public pages, booking, recovery, QR verification and staff screens, with translated PDF downloads and a remembered language preference. Translation details and checks are in `research/LOCALIZATION.md`.
 - Editorial landing page with an enhanced client fleet photograph, original fleet image, licensed destination photography, category filters and booking FAQs. Sources, saved assets and the image-edit prompt are in `research/LANDING_DESIGN.md`.
 - Dilanka Facebook photo galleries, hero photo controls and click-to-play embedded company films.
 - Interactive route maps on departures and seat selection, with stop focus, boarding/drop-off highlights and illustrative E01 sections. See `research/MEDIA_AND_MAPS.md` for sources and map limitations.
