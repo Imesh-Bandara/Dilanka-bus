@@ -17,7 +17,12 @@ async function handler(req: NextRequest) {
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "local";
     if (req.method !== "GET") {
       const origin = req.headers.get("origin");
-      if (origin && origin !== req.nextUrl.origin)
+      const host = req.headers.get("host");
+      const protocol =
+        req.headers.get("x-forwarded-proto")?.split(",")[0] ||
+        req.nextUrl.protocol.replace(":", "");
+      const requestOrigin = host ? `${protocol}://${host}` : req.nextUrl.origin;
+      if (origin && origin !== requestOrigin && origin !== req.nextUrl.origin)
         throw new service.Fault("Request origin is not allowed.", 403);
     }
     const json = (value: unknown, status = 200) =>
